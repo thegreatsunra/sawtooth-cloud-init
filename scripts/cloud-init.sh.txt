@@ -143,6 +143,38 @@ runcmd:
 ## Start and stop denyhosts, as sometimes changing the timezone can screw them up:
   - /etc/init.d/denyhosts stop
   - /etc/init.d/denyhosts start
+
+#########
+## UFW ##
+#########
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING UFW'
+  - printf '=======\n\n'
+## Temporarily disable uncomplicated firewall as we're going to start configuring it:
+  - ufw disable
+## Create backups of our firewall rules:
+  - cp /etc/ufw/before.rules /etc/ufw/before.original
+  - cp /etc/ufw/before6.rules /etc/ufw/before6.original
+## Add custom logging rules for psad right above the final commit line:
+  - perl -0777 -i.original -pe "s@# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@# custom logging directives for psad\n-A INPUT -j LOG\n-A FORWARD -j LOG\n\n# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@igs" /etc/ufw/before.rules
+  - perl -0777 -i.original -pe "s@# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@# custom logging directives for psad\n-A INPUT -j LOG\n-A FORWARD -j LOG\n\n# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@igs" /etc/ufw/before6.rules
+## Allow SSH on the default ports:
+  - ufw allow ssh
+## Deny requests on the default SSH ports:
+#  - ufw deny ssh
+## Allow requests on updated SSH port:
+#  - ufw allow 4444/tcp
+## Allow requests on the http port:
+# - ufw allow http
+## Allow requests on the https port:
+# - ufw allow https
+## Turn on logging:
+  - ufw logging on
+## Enable uncomplicated firewall now that we have it configured:
+  - ufw enable
+## Show the rules that are active:
+  - ufw status verbose
+
 ################
 ## END RUNCMD ##
 ################
