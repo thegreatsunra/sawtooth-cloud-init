@@ -1,0 +1,51 @@
+#cloud-config
+
+package_upgrade: true
+packages:
+  - apt-listchanges
+  - apt-show-versions
+  - chkrootkit
+  - debsecan
+  - debsums
+  - denyhosts
+  - dialog
+  - fail2ban
+  - git
+  - grc
+  - language-pack-en-base
+  - libpam-tmpdir
+  - logwatch
+  - nmap
+  - psad
+  - rkhunter
+  - software-properties-common
+  - zsh
+users:
+  - name: __username__
+    gecos: __full_name__
+    ssh-authorized-keys:
+##    SSH keys
+      - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== __email@domain.tld__
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bash
+runcmd:
+  - printf '\n\n=======\n'
+  - echo 'BEGIN RUNCMD'
+  - printf '=======\n\n'
+
+################
+## END RUNCMD ##
+################
+  - printf '\n\n=======\n'
+  - echo 'END RUNCMD'
+  - printf '=======\n\n'
+
+## Restart the server:
+power_state:
+  mode: reboot
+  delay: "now"
+  message: "Goodbye!"
+  timeout: 30
+  condition: True
+
