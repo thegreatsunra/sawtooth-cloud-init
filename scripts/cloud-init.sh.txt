@@ -77,6 +77,20 @@ runcmd:
 ## Now that we're done securing SSH, restart it: (this might disrupt SSH access, but so far that doesn't seem to be happening)
   - /etc/init.d/ssh restart
 
+##############
+## FAIL2BAN ##
+##############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING FAIL2BAN'
+  - printf '=======\n\n'
+## Back up our fail2ban configuration file:
+  - cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.original
+## Set our email address for receiving fail2ban messages:
+  - sed -i -e '/^destemail/s/^.*$/destemail = __email@domain.tld__/' /etc/fail2ban/jail.conf
+## Use sendmail to send email messages:
+  - sed -i -e '/^mta/s/^.*$/mta = sendmail/' /etc/fail2ban/jail.conf
+## Now that we're done configuring fail2ban, restart it:
+  - service fail2ban start
 ################
 ## END RUNCMD ##
 ################
