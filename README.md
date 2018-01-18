@@ -82,6 +82,8 @@ ssh username@ip.address.of.server
 
 2) Go line-by-line through `./scripts/manual-commands.sh.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
 
+3) Go line-by-line through `./scripts/sawtooth-commands.sh.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
+
 ## License
 
 The MIT License (MIT)
