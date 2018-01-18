@@ -10,3 +10,11 @@ sudo -u sawtooth sawset proposal create -k /home/sawtooth/.sawtooth/keys/sawtoot
 ## Allow yo'self to be yo'self
 sudo -u sawtooth sawset proposal create -k /home/sawtooth/.sawtooth/keys/sawtooth.priv sawtooth.identity.allowed_keys=`cat /home/sawtooth/.sawtooth/keys/sawtooth.pub`
 
+## Create a batch of intkey transactions
+intkey create_batch
+
+## Load that intkey batch onto the blockchain
+intkey load
+
+## See those hot, hot blocks
+sawtooth block list
