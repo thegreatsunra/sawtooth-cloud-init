@@ -175,6 +175,41 @@ runcmd:
 ## Show the rules that are active:
   - ufw status verbose
 
+##############
+## LOGWATCH ##
+##############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING LOGWATCH'
+  - printf '=======\n\n'
+## Back up our logwatch configuration file:
+  - cp /usr/share/logwatch/default.conf/logwatch.conf /usr/share/logwatch/default.conf/logwatch.original
+## Set our email address for receiving logwatch messages:
+  - sed -i -e 's/^#MailTo.*$/MailTo = __email@domain.tld__/' /usr/share/logwatch/default.conf/logwatch.conf
+## Set our default logwatch output format to email:
+  - sed -i -e 's/^Output.*$/Output = mail/' /usr/share/logwatch/default.conf/logwatch.conf
+## Set our default logwatch format to HTML:
+  - sed -i -e 's/^Format.*$/Format = html/' /usr/share/logwatch/default.conf/logwatch.conf
+
+###############
+## BLACKLIST ##
+###############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING BLACKLIST'
+  - printf '=======\n\n'
+## Back up our blacklist.conf configuration file:
+  - cp /etc/modprobe.d/blacklist.conf /etc/modprobe.d/blacklist.original
+## Blacklist USB storage:
+  - echo "blacklist usb-storage" | tee -a /etc/modprobe.d/blacklist.conf
+
+###############
+## INITRAMFS ##
+###############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING INITRAMFS'
+  - printf '=======\n\n'
+## Init some security somethingoranother around RAM:
+  - update-initramfs -u
+
 ################
 ## END RUNCMD ##
 ################
