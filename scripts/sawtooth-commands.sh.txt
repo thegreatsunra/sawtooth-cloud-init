@@ -1,0 +1,20 @@
+## Start Sawtooth services
+sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-api && sudo systemctl start sawtooth-intkey-tp-python && sudo systemctl start sawtooth-settings-tp && sudo systemctl start sawtooth-identity-tp
+
+## Confirm Sawtooth services started successfully
+sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey-tp-python -u sawtooth-settings-tp -u sawtooth-identity-tp
+
+## Create a proposal that allows the intkey transaction processor
+sudo -u sawtooth sawset proposal create -k /home/sawtooth/.sawtooth/keys/sawtooth.priv sawtooth.validator.transaction_families='[{"family": "intkey", "version": "1.0"}, {"family":"sawtooth_settings", "version":"1.0"}]'
+
+## Allow yo'self to be yo'self
+sudo -u sawtooth sawset proposal create -k /home/sawtooth/.sawtooth/keys/sawtooth.priv sawtooth.identity.allowed_keys=`cat /home/sawtooth/.sawtooth/keys/sawtooth.pub`
+
+## Create a batch of intkey transactions
+intkey create_batch
+
+## Load that intkey batch onto the blockchain
+intkey load
+
+## See those hot, hot blocks
+sawtooth block list

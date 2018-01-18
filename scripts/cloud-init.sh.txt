@@ -1,0 +1,292 @@
+#cloud-config
+
+package_upgrade: true
+packages:
+  - apt-listchanges
+  - apt-show-versions
+  - chkrootkit
+  - debsecan
+  - debsums
+  - denyhosts
+  - dialog
+  - fail2ban
+  - git
+  - grc
+  - language-pack-en-base
+  - libpam-tmpdir
+  - logwatch
+  - nmap
+  - psad
+  - rkhunter
+  - software-properties-common
+  - zsh
+users:
+  - name: __username__
+    gecos: __full_name__
+    ssh-authorized-keys:
+##    SSH keys
+      - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== __email@domain.tld__
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bash
+runcmd:
+  - printf '\n\n=======\n'
+  - echo 'BEGIN RUNCMD'
+  - printf '=======\n\n'
+
+#########
+## SSH ##
+#########
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING SSH'
+  - printf '=======\n\n'
+## Temporarily stop fail2ban as we secure SSH:
+  - service fail2ban stop
+## Back up our SSH configuration file:
+  - cp /etc/ssh/sshd_config /etc/ssh/_sshd_config.original
+## Change the default SSH port to something else:
+#  - sed -i -e '/^Port/s/^.*$/Port 4444/' /etc/ssh/sshd_config
+## If there's a duplicate PasswordAuthentication line, get rid of it: (?)
+  - sed -i -e '/^PasswordAuthentication/s/^.*$//' /etc/ssh/sshd_config
+## If there's a commented-out PasswordAuthentication line, disable password authentication:
+  - sed -i -e '/^#PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
+## Prevent root login via SSH:
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+## Disable X11Forwarding:
+  - sed -i -e '/^X11Forwarding/s/^.*$/X11Forwarding no/' /etc/ssh/sshd_config
+## Whatever is currently set for UsePrivilegeSeparation, set it to sandbox:
+  - sed -i -e '/^UsePrivilegeSeparation/s/^.*$/UsePrivilegeSeparation sandbox/' /etc/ssh/sshd_config
+## Disable TCPKeepAlive:
+  - sed -i -e '/^TCPKeepAlive/s/^.*$/TCPKeepAlive no/' /etc/ssh/sshd_config
+## Set logging level to verbose: (I think some log analysis tools count on this)
+  - sed -i -e '/^LogLevel/s/^.*$/LogLevel VERBOSE/' /etc/ssh/sshd_config
+## Add a comment that we're gonna add some things below:
+  - sed -i -e '$a# Added by cloud-config init process' /etc/ssh/sshd_config
+## Restrict SSH access to only our one allowed user:
+  - sed -i -e '$aAllowUsers __username__' /etc/ssh/sshd_config
+## Disable AllowTcpForwarding:
+  - sed -i -e '$aAllowTcpForwarding no' /etc/ssh/sshd_config
+## Disable compression:
+  - sed -i -e '$aCompression no' /etc/ssh/sshd_config
+## Disable AllowAgentForwarding:
+  - sed -i -e '$aAllowAgentForwarding no' /etc/ssh/sshd_config
+## Set UsePrivilegeSeparation to sandbox: (you already do this above, though)
+#  - sed -i -e '$aUsePrivilegeSeparation sandbox' /etc/ssh/sshd_config
+## Set the maximum sessions to 2:
+  - sed -i -e '$aMaxSessions 2' /etc/ssh/sshd_config
+## Now that we're done securing SSH, restart it: (this might disrupt SSH access, but so far that doesn't seem to be happening)
+  - /etc/init.d/ssh restart
+
+##############
+## FAIL2BAN ##
+##############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING FAIL2BAN'
+  - printf '=======\n\n'
+## Back up our fail2ban configuration file:
+  - cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.original
+## Set our email address for receiving fail2ban messages:
+  - sed -i -e '/^destemail/s/^.*$/destemail = __email@domain.tld__/' /etc/fail2ban/jail.conf
+## Use sendmail to send email messages:
+  - sed -i -e '/^mta/s/^.*$/mta = sendmail/' /etc/fail2ban/jail.conf
+## Now that we're done configuring fail2ban, restart it:
+  - service fail2ban start
+
+##################
+## APT UPGRADES ##
+##################
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING APT UPGRADES'
+  - printf '=======\n\n'
+## Create a folder for backing up our apt configurations: (necessary because apt pattern matches all configuration files in its folder, regardless of extension)
+  - mkdir /etc/apt/apt.conf.d/original
+## Create a backup of our unattended-upgrades configuration file:
+  - cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/original/50unattended-upgrades.original
+## Uncomment the line for updates:
+  - sed -i -e 's,//[ \t]*"${distro_id}:${distro_codename}-updates,\t"${distro_id}:${distro_codename}-updates,' /etc/apt/apt.conf.d/50unattended-upgrades
+## Uncomment the line for automatically rebooting the system if an automatic update requires it, and set a time for when it should happen:
+  - sed -i -e 's,//Unattended-Upgrade::Automatic-Reboot-Time "[0-9:]\+";,Unattended-Upgrade::Automatic-Reboot-Time "3:00";,' /etc/apt/apt.conf.d/50unattended-upgrades
+## Create a backup of our periodic configuration file:
+  - cp /etc/apt/apt.conf.d/10periodic /etc/apt/apt.conf.d/original/10periodic.original
+## Set automatic updates of package lists to true:
+  - sed -i -e 's/Update-Package-Lists "[0-9]\+";/Update-Package-Lists "1";/' /etc/apt/apt.conf.d/10periodic
+## Set automatic download of upgradeable packages to true:
+  - sed -i -e 's/Download-Upgradeable-Packages "[0-9]\+";/Download-Upgradeable-Packages "1";/' /etc/apt/apt.conf.d/10periodic
+## Set interval for automatically removing unused packages to once a week:
+  - sed -i -e 's/AutocleanInterval "[0-9]\+";/AutocleanInterval "7";/' /etc/apt/apt.conf.d/10periodic
+## Set automatic unattended upgrades of periodic packages to true: (this means to automatically apply feature updates, not just security updates, I think)
+  - sed -i -e '$aAPT::Periodic::Unattended-Upgrade "1";' /etc/apt/apt.conf.d/10periodic
+  - apt update -yq
+  - apt upgrade -yq
+
+###########
+## PASSWD #
+###########
+  - printf '\n\n=======\n'
+  - echo 'CHANGING PASSWDS'
+  - printf '=======\n\n'
+  - echo "root:__temporary_password_change_me_immediately__"|chpasswd
+  - echo "__username__:__temporary_password_change_me_immediately__"|chpasswd
+
+##############
+## TIMEZONE ##
+##############
+  - printf '\n'
+  - echo 'CONFIGURING TIMEZONE'
+  - printf '\n'
+## Set the system's timezone:
+## Common options: America/New_York    America/Chicago     America/Denver    America/Los_Angeles
+  - timedatectl set-timezone America/Chicago
+## Start and stop cronjobs, as sometimes changing the timezone can screw them up:
+  - /etc/init.d/cron stop
+  - /etc/init.d/cron start
+## Start and stop denyhosts, as sometimes changing the timezone can screw them up:
+  - /etc/init.d/denyhosts stop
+  - /etc/init.d/denyhosts start
+
+#########
+## UFW ##
+#########
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING UFW'
+  - printf '=======\n\n'
+## Temporarily disable uncomplicated firewall as we're going to start configuring it:
+  - ufw disable
+## Create backups of our firewall rules:
+  - cp /etc/ufw/before.rules /etc/ufw/before.original
+  - cp /etc/ufw/before6.rules /etc/ufw/before6.original
+## Add custom logging rules for psad right above the final commit line:
+  - perl -0777 -i.original -pe "s@# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@# custom logging directives for psad\n-A INPUT -j LOG\n-A FORWARD -j LOG\n\n# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@igs" /etc/ufw/before.rules
+  - perl -0777 -i.original -pe "s@# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@# custom logging directives for psad\n-A INPUT -j LOG\n-A FORWARD -j LOG\n\n# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@igs" /etc/ufw/before6.rules
+## Allow SSH on the default ports:
+  - ufw allow ssh
+## Deny requests on the default SSH ports:
+#  - ufw deny ssh
+## Allow requests on updated SSH port:
+#  - ufw allow 4444/tcp
+## Allow requests on the http port:
+# - ufw allow http
+## Allow requests on the https port:
+# - ufw allow https
+## Turn on logging:
+  - ufw logging on
+## Enable uncomplicated firewall now that we have it configured:
+  - ufw enable
+## Show the rules that are active:
+  - ufw status verbose
+
+##############
+## LOGWATCH ##
+##############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING LOGWATCH'
+  - printf '=======\n\n'
+## Back up our logwatch configuration file:
+  - cp /usr/share/logwatch/default.conf/logwatch.conf /usr/share/logwatch/default.conf/logwatch.original
+## Set our email address for receiving logwatch messages:
+  - sed -i -e 's/^#MailTo.*$/MailTo = __email@domain.tld__/' /usr/share/logwatch/default.conf/logwatch.conf
+## Set our default logwatch output format to email:
+  - sed -i -e 's/^Output.*$/Output = mail/' /usr/share/logwatch/default.conf/logwatch.conf
+## Set our default logwatch format to HTML:
+  - sed -i -e 's/^Format.*$/Format = html/' /usr/share/logwatch/default.conf/logwatch.conf
+
+###############
+## BLACKLIST ##
+###############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING BLACKLIST'
+  - printf '=======\n\n'
+## Back up our blacklist.conf configuration file:
+  - cp /etc/modprobe.d/blacklist.conf /etc/modprobe.d/blacklist.original
+## Blacklist USB storage:
+  - echo "blacklist usb-storage" | tee -a /etc/modprobe.d/blacklist.conf
+
+###############
+## INITRAMFS ##
+###############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING INITRAMFS'
+  - printf '=======\n\n'
+## Init some security somethingoranother around RAM:
+  - update-initramfs -u
+
+##############
+## RKHUNTER ##
+##############
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING RKHUNTER'
+  - printf '=======\n\n'
+## Update rookit hunter and update its properties definition list:
+  - rkhunter --update
+  - rkhunter --propupd
+
+###########
+## LYNIS ##
+###########
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING LYNIS'
+  - printf '=======\n\n'
+## Add a keyserver for grabbing the latest version of lynis off their own package server:
+  - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C80E383C3DE9F082E01391A0366C67DE91CA5D5F
+## Add the URL for lynis' package server:
+  - echo 'deb https://packages.cisofy.com/community/lynis/deb/ xenial main' >> /etc/apt/sources.list.d/cisofy-lynis.list
+## Grab latest apt updates now that we can query lynis' package server, and install the latest available version of lynis:
+  - apt update -yq
+  - DEBIAN_FRONTEND=noninteractive apt install -yq lynis
+
+#################################
+## INSTALLING SAWTOOTH NIGHTLY ##
+#################################
+  - printf '\n\n=======\n'
+  - echo 'ADDING APT FOR SAWTOOTH NIGHTLY'
+  - printf '=======\n\n'
+  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD
+  - add-apt-repository 'deb http://repo.sawtooth.me/ubuntu/1.0/stable xenial universe' -y
+  - apt update -y
+  - apt install -y sawtooth python3-sawtooth-identity
+  - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
+# create public/private signing keys
+  - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
+# create genesis block using signing keys
+  - sudo -u sawtooth sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
+# apply genesis block
+  - sawadm genesis /home/sawtooth/config-genesis.batch
+# generate validator keys
+  - sawadm keygen
+# now you should be able to start all the things
+
+#####################
+## INSTALL UPDATES ##
+#####################
+  - printf '\n\n=======\n'
+  - echo 'INSTALLING UPDATES'
+  - printf '=======\n\n'
+  - apt update -yq
+  - apt upgrade -yq
+
+################
+## END RUNCMD ##
+################
+  - printf '\n\n=======\n'
+  - echo 'END RUNCMD'
+  - printf '=======\n\n'
+
+## Restart the server:
+power_state:
+  mode: reboot
+  delay: "now"
+  message: "Goodbye!"
+  timeout: 30
+  condition: True
+
+################################################################################
+################################################################################
+
+#############################
+## PLACEHOLDERS TO REPLACE ##
+#############################
+## __username__ - the username of the primary admin user that will be created on the server (e.g. dane)
+## __full_name__ - the full name of the primary admin user (e.g. Dane Petersen)
+## __email@domain.tld__ - the email address of the primary admin user
+## __domain.tld__ - the domain for your website that will be hosted by nginx (e.g. thegreatsunra.com)
+## __temporary_password_change_me_immediately__ - a temporary password that you will change immediately after logging into the server
