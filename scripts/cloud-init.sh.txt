@@ -234,6 +234,15 @@ runcmd:
   - apt update -yq
   - DEBIAN_FRONTEND=noninteractive apt install -yq lynis
 
+#####################
+## INSTALL UPDATES ##
+#####################
+  - printf '\n\n=======\n'
+  - echo 'INSTALLING UPDATES'
+  - printf '=======\n\n'
+  - apt update -yq
+  - apt upgrade -yq
+
 ################
 ## END RUNCMD ##
 ################
