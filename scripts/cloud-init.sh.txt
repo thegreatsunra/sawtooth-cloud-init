@@ -91,6 +91,34 @@ runcmd:
   - sed -i -e '/^mta/s/^.*$/mta = sendmail/' /etc/fail2ban/jail.conf
 ## Now that we're done configuring fail2ban, restart it:
   - service fail2ban start
+
+##################
+## APT UPGRADES ##
+##################
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING APT UPGRADES'
+  - printf '=======\n\n'
+## Create a folder for backing up our apt configurations: (necessary because apt pattern matches all configuration files in its folder, regardless of extension)
+  - mkdir /etc/apt/apt.conf.d/original
+## Create a backup of our unattended-upgrades configuration file:
+  - cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/original/50unattended-upgrades.original
+## Uncomment the line for updates:
+  - sed -i -e 's,//[ \t]*"${distro_id}:${distro_codename}-updates,\t"${distro_id}:${distro_codename}-updates,' /etc/apt/apt.conf.d/50unattended-upgrades
+## Uncomment the line for automatically rebooting the system if an automatic update requires it, and set a time for when it should happen:
+  - sed -i -e 's,//Unattended-Upgrade::Automatic-Reboot-Time "[0-9:]\+";,Unattended-Upgrade::Automatic-Reboot-Time "3:00";,' /etc/apt/apt.conf.d/50unattended-upgrades
+## Create a backup of our periodic configuration file:
+  - cp /etc/apt/apt.conf.d/10periodic /etc/apt/apt.conf.d/original/10periodic.original
+## Set automatic updates of package lists to true:
+  - sed -i -e 's/Update-Package-Lists "[0-9]\+";/Update-Package-Lists "1";/' /etc/apt/apt.conf.d/10periodic
+## Set automatic download of upgradeable packages to true:
+  - sed -i -e 's/Download-Upgradeable-Packages "[0-9]\+";/Download-Upgradeable-Packages "1";/' /etc/apt/apt.conf.d/10periodic
+## Set interval for automatically removing unused packages to once a week:
+  - sed -i -e 's/AutocleanInterval "[0-9]\+";/AutocleanInterval "7";/' /etc/apt/apt.conf.d/10periodic
+## Set automatic unattended upgrades of periodic packages to true: (this means to automatically apply feature updates, not just security updates, I think)
+  - sed -i -e '$aAPT::Periodic::Unattended-Upgrade "1";' /etc/apt/apt.conf.d/10periodic
+  - apt update -yq
+  - apt upgrade -yq
+
 ################
 ## END RUNCMD ##
 ################
