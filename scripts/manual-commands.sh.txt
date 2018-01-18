@@ -15,3 +15,23 @@ grc tail -fn+1 /var/log/cloud-init-output.log
 sudo passwd root
 sudo passwd __REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_USERNAME__
 
+## Install and configure sendmail
+sudo apt install -yq sendmail sendmail-bin
+# Configure with existing? Y
+# Configure with existing? Y
+# Reload? Y
+sudo sendmailconfig
+
+## Install oh-my-zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" && chsh -s /bin/zsh
+
+
+## Run rootkit hunter
+sudo rkhunter --checkall --skip-keypress
+
+## Run check rootkit
+sudo chkrootkit
+
+## Run lynis security audit
+sudo lynis audit system --quick
+
