@@ -34,6 +34,49 @@ runcmd:
   - echo 'BEGIN RUNCMD'
   - printf '=======\n\n'
 
+#########
+## SSH ##
+#########
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING SSH'
+  - printf '=======\n\n'
+## Temporarily stop fail2ban as we secure SSH:
+  - service fail2ban stop
+## Back up our SSH configuration file:
+  - cp /etc/ssh/sshd_config /etc/ssh/_sshd_config.original
+## Change the default SSH port to something else:
+#  - sed -i -e '/^Port/s/^.*$/Port 4444/' /etc/ssh/sshd_config
+## If there's a duplicate PasswordAuthentication line, get rid of it: (?)
+  - sed -i -e '/^PasswordAuthentication/s/^.*$//' /etc/ssh/sshd_config
+## If there's a commented-out PasswordAuthentication line, disable password authentication:
+  - sed -i -e '/^#PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
+## Prevent root login via SSH:
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+## Disable X11Forwarding:
+  - sed -i -e '/^X11Forwarding/s/^.*$/X11Forwarding no/' /etc/ssh/sshd_config
+## Whatever is currently set for UsePrivilegeSeparation, set it to sandbox:
+  - sed -i -e '/^UsePrivilegeSeparation/s/^.*$/UsePrivilegeSeparation sandbox/' /etc/ssh/sshd_config
+## Disable TCPKeepAlive:
+  - sed -i -e '/^TCPKeepAlive/s/^.*$/TCPKeepAlive no/' /etc/ssh/sshd_config
+## Set logging level to verbose: (I think some log analysis tools count on this)
+  - sed -i -e '/^LogLevel/s/^.*$/LogLevel VERBOSE/' /etc/ssh/sshd_config
+## Add a comment that we're gonna add some things below:
+  - sed -i -e '$a# Added by cloud-config init process' /etc/ssh/sshd_config
+## Restrict SSH access to only our one allowed user:
+  - sed -i -e '$aAllowUsers __username__' /etc/ssh/sshd_config
+## Disable AllowTcpForwarding:
+  - sed -i -e '$aAllowTcpForwarding no' /etc/ssh/sshd_config
+## Disable compression:
+  - sed -i -e '$aCompression no' /etc/ssh/sshd_config
+## Disable AllowAgentForwarding:
+  - sed -i -e '$aAllowAgentForwarding no' /etc/ssh/sshd_config
+## Set UsePrivilegeSeparation to sandbox: (you already do this above, though)
+#  - sed -i -e '$aUsePrivilegeSeparation sandbox' /etc/ssh/sshd_config
+## Set the maximum sessions to 2:
+  - sed -i -e '$aMaxSessions 2' /etc/ssh/sshd_config
+## Now that we're done securing SSH, restart it: (this might disrupt SSH access, but so far that doesn't seem to be happening)
+  - /etc/init.d/ssh restart
+
 ################
 ## END RUNCMD ##
 ################
@@ -49,3 +92,14 @@ power_state:
   timeout: 30
   condition: True
 
+################################################################################
+################################################################################
+
+#############################
+## PLACEHOLDERS TO REPLACE ##
+#############################
+## __username__ - the username of the primary admin user that will be created on the server (e.g. dane)
+## __full_name__ - the full name of the primary admin user (e.g. Dane Petersen)
+## __email@domain.tld__ - the email address of the primary admin user
+## __domain.tld__ - the domain for your website that will be hosted by nginx (e.g. thegreatsunra.com)
+## __temporary_password_change_me_immediately__ - a temporary password that you will change immediately after logging into the server
