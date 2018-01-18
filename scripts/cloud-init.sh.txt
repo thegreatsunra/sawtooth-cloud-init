@@ -119,6 +119,15 @@ runcmd:
   - apt update -yq
   - apt upgrade -yq
 
+###########
+## PASSWD #
+###########
+  - printf '\n\n=======\n'
+  - echo 'CHANGING PASSWDS'
+  - printf '=======\n\n'
+  - echo "root:__temporary_password_change_me_immediately__"|chpasswd
+  - echo "__username__:__temporary_password_change_me_immediately__"|chpasswd
+
 ################
 ## END RUNCMD ##
 ################
