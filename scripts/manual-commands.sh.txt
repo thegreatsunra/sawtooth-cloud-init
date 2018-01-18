@@ -25,6 +25,8 @@ sudo sendmailconfig
 ## Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" && chsh -s /bin/zsh
 
+## Reboot the system
+sudo reboot
 
 ## Run rootkit hunter
 sudo rkhunter --checkall --skip-keypress
