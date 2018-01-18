@@ -46,6 +46,18 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 
 6) Save `./scripts/cloud-init.sh.txt`, select all, and copy it to your clipboard
 
+#### Digital Ocean
+
+1) Log in to Digital Ocean
+
+2) Create a new droplet
+
+3) Under "Select additional options" check the box for "User data" and paste in the contents of `./scripts/cloud-init.sh.txt`
+
+4) Click "Create" and wait a few moments as Digital Ocean creates your new droplet
+
+5) Once Digital Ocean finishes creating your droplet, copy the IP address for your droplet
+
 
 ## License
 
