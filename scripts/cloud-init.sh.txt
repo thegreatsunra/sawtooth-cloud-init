@@ -128,6 +128,21 @@ runcmd:
   - echo "root:__temporary_password_change_me_immediately__"|chpasswd
   - echo "__username__:__temporary_password_change_me_immediately__"|chpasswd
 
+##############
+## TIMEZONE ##
+##############
+  - printf '\n'
+  - echo 'CONFIGURING TIMEZONE'
+  - printf '\n'
+## Set the system's timezone:
+## Common options: America/New_York    America/Chicago     America/Denver    America/Los_Angeles
+  - timedatectl set-timezone America/Chicago
+## Start and stop cronjobs, as sometimes changing the timezone can screw them up:
+  - /etc/init.d/cron stop
+  - /etc/init.d/cron start
+## Start and stop denyhosts, as sometimes changing the timezone can screw them up:
+  - /etc/init.d/denyhosts stop
+  - /etc/init.d/denyhosts start
 ################
 ## END RUNCMD ##
 ################
