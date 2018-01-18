@@ -2,6 +2,50 @@
 
 > Spin up a new Ubuntu + Hyperledger Sawtooth on Digital Ocean
 
+### Notes
+
+* Placeholder values are delimited with `__double_underscores__`
+
+### Instructions
+
+### Getting started
+
+1) Clone this repo
+
+```bash
+git clone https://github.com/thegreatsunra/sawtooth-cloud-init.git
+```
+
+2) [Generate an SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) if you don't have one already
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "email@domain.tld"
+```
+
+3) Copy your SSH key [to your clipboard](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
+
+```bash
+pbcopy < ~/.ssh/id_rsa.pub
+```
+
+4) Open `./scripts/cloud-init.sh.txt` in a text editor and replace the placeholder SSH key (around line 30) with the contents of your clipboard
+
+```bash
+      - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== __email@domain.tld__
+```
+
+Be careful not to delete the indentation or `- ` at the beginning of the line, as `cloud-init` needs them to recognize the command
+
+5) Search within `./scripts/cloud-init.sh.txt` and replace the following placeholder strings with your desired values:
+
+* `__username__` - the username of the primary admin user that will be created on the server (e.g. `dane`)
+* `__full_name__` - the full name of the primary admin user (e.g. `Dane Petersen`)
+* `__email@domain.tld__` - the email address of the primary admin user
+* `__domain.tld__` - the domain for your website that will be hosted by nginx (e.g. `thegreatsunra.com`)
+* `__temporary_password_change_me_immediately__` - a temporary, throwaway password that will live forever on your server in your `cloud-init` script and **you will immediately change upon logging into the server**
+
+6) Save `./scripts/cloud-init.sh.txt`, select all, and copy it to your clipboard
+
 
 ## License
 
