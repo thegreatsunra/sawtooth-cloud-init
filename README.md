@@ -72,6 +72,15 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 
 3) Save `./scripts/manual-commands.sh.txt`
 
+#### SSH
+
+1) SSH into your new server using the username you chose and the IP address provided by Digital Ocean
+
+```bash
+ssh username@ip.address.of.server
+```
+
+2) Go line-by-line through `./scripts/manual-commands.sh.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
 
 ## License
 
