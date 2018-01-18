@@ -35,3 +35,10 @@ sudo chkrootkit
 ## Run lynis security audit
 sudo lynis audit system --quick
 
+## UPDATE DNS WITH HOSTNAME DOMAIN FOR SERVER
+## Create the hostname
+lsattr /etc/hostname && sudo chattr -i /etc/hostname
+sudo sh -c "echo '__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_DOMAIN_NAME__' > /etc/hostname"
+sudo hostname -F /etc/hostname
+sudo chattr +i /etc/hostname
+
