@@ -234,6 +234,27 @@ runcmd:
   - apt update -yq
   - DEBIAN_FRONTEND=noninteractive apt install -yq lynis
 
+#################################
+## INSTALLING SAWTOOTH NIGHTLY ##
+#################################
+  - printf '\n\n=======\n'
+  - echo 'ADDING APT FOR SAWTOOTH NIGHTLY'
+  - printf '=======\n\n'
+  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD
+  - add-apt-repository 'deb http://repo.sawtooth.me/ubuntu/1.0/stable xenial universe' -y
+  - apt update -y
+  - apt install -y sawtooth python3-sawtooth-identity
+  - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
+# create public/private signing keys
+  - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
+# create genesis block using signing keys
+  - sudo -u sawtooth sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
+# apply genesis block
+  - sawadm genesis /home/sawtooth/config-genesis.batch
+# generate validator keys
+  - sawadm keygen
+# now you should be able to start all the things
+
 #####################
 ## INSTALL UPDATES ##
 #####################
