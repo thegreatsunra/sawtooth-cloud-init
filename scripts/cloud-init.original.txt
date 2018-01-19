@@ -10,19 +10,22 @@ packages:
   - denyhosts
   - dialog
   - fail2ban
+  - g++
   - git
   - grc
+  - htop
   - language-pack-en-base
   - libpam-tmpdir
   - logwatch
+  - make
   - nmap
   - psad
   - rkhunter
   - software-properties-common
   - zsh
 users:
-  - name: __username__
-    gecos: __full_name__
+  - name: sawtooth
+    gecos: Professor Sawtooth
     ssh-authorized-keys:
 ##    SSH keys
       - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== __email@domain.tld__
@@ -63,7 +66,7 @@ runcmd:
 ## Add a comment that we're gonna add some things below:
   - sed -i -e '$a# Added by cloud-config init process' /etc/ssh/sshd_config
 ## Restrict SSH access to only our one allowed user:
-  - sed -i -e '$aAllowUsers __username__' /etc/ssh/sshd_config
+  - sed -i -e '$aAllowUsers sawtooth' /etc/ssh/sshd_config
 ## Disable AllowTcpForwarding:
   - sed -i -e '$aAllowTcpForwarding no' /etc/ssh/sshd_config
 ## Disable compression:
@@ -126,7 +129,7 @@ runcmd:
   - echo 'CHANGING PASSWDS'
   - printf '=======\n\n'
   - echo "root:__temporary_password_change_me_immediately__"|chpasswd
-  - echo "__username__:__temporary_password_change_me_immediately__"|chpasswd
+  - echo "sawtooth:__temporary_password_change_me_immediately__"|chpasswd
 
 ##############
 ## TIMEZONE ##
@@ -164,10 +167,8 @@ runcmd:
 #  - ufw deny ssh
 ## Allow requests on updated SSH port:
 #  - ufw allow 4444/tcp
-## Allow requests on the http port:
-# - ufw allow http
-## Allow requests on the https port:
-# - ufw allow https
+## Allow requests on 8008:
+  - ufw allow 8008
 ## Turn on logging:
   - ufw logging on
 ## Enable uncomplicated firewall now that we have it configured:
@@ -245,15 +246,54 @@ runcmd:
   - apt update -y
   - apt install -y sawtooth python3-sawtooth-identity
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
-# create public/private signing keys
+## allow connections from outside on port 8008
+  - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --verbose --bind 0.0.0.0:8008/' /etc/default/sawtooth-rest-api
+  - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
+## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
-# create genesis block using signing keys
+## create genesis block using signing keys
   - sudo -u sawtooth sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
-# apply genesis block
+## apply genesis block
   - sawadm genesis /home/sawtooth/config-genesis.batch
-# generate validator keys
+## generate validator keys at /etc/sawtooth/keys/validator.priv & /etc/sawtooth/keys/validator.pub
   - sawadm keygen
-# now you should be able to start all the things
+## now you should be able to start all the things
+
+#####################
+## INSTALLING NODE ##
+#####################
+  - printf '\n\n=======\n'
+  - echo 'INSTALLING NODE'
+  - printf '=======\n\n'
+  - curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+  - apt install -y nodejs
+
+#######################
+## SETTING UP GITHUB ##
+#######################
+  - printf '\n\n=======\n'
+  - echo 'SETTING UP GITHUB'
+  - printf '=======\n\n'
+  - sudo -u sawtooth ssh-keygen -t rsa -N "" -b 4096 -C "__email@domain.tld__" -f /home/sawtooth/.ssh/id_rsa
+
+###########################
+## CLONING SAWTOOTH CORE ##
+###########################
+  - printf '\n\n=======\n'
+  - echo 'CLONING SAWTOOTH CORE'
+  - printf '=======\n\n'
+  - sudo -u sawtooth git clone https://github.com/hyperledger/sawtooth-core.git /home/sawtooth/sawtooth-core
+
+###########################
+## INSTALLING YARN ##
+###########################
+#  - printf '\n\n=======\n'
+#  - echo 'INSTALLING YARN'
+#  - printf '=======\n\n'
+#  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+#  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+#  - apt update -yq
+#  - apt install -y yarn
 
 #####################
 ## INSTALL UPDATES ##
@@ -285,8 +325,6 @@ power_state:
 #############################
 ## PLACEHOLDERS TO REPLACE ##
 #############################
-## __username__ - the username of the primary admin user that will be created on the server (e.g. dane)
-## __full_name__ - the full name of the primary admin user (e.g. Dane Petersen)
 ## __email@domain.tld__ - the email address of the primary admin user
 ## __domain.tld__ - the domain for your website that will be hosted by nginx (e.g. thegreatsunra.com)
 ## __temporary_password_change_me_immediately__ - a temporary password that you will change immediately after logging into the server

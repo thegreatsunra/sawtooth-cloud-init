@@ -1,0 +1,61 @@
+## Get your public key for adding to GitHub
+cat ~/.ssh/id_rsa.pub
+
+## Copy/paste the output from the command above into your transaction processor's GitHub repo
+
+## Clone your transaction processor repo
+cd ~ && git clone git@github.com:__YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__.git
+
+## Build sawtooth-core
+cd ~/sawtooth-core && git checkout tags/v1.0.0rc6 -b tags/v1.0.0rc6 && cd sdk/javascript && npm install && cd ~
+
+## Put sawtooth-core in your transaction processor
+cp -r ~/sawtooth-core ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/
+
+## Build your transaction processor
+cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && npm install && cd ~
+
+## Start Sawtooth services
+sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-api && sudo systemctl start sawtooth-intkey-tp-python && sudo systemctl start sawtooth-settings-tp && sudo systemctl start sawtooth-identity-tp
+
+## Confirm Sawtooth services started successfully
+sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey-tp-python -u sawtooth-settings-tp -u sawtooth-identity-tp
+
+## Allow yo'self to be yo'self
+sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
+
+## Add permitted devices by public key
+## THIS DOESN'T WORK because of whatever
+# sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY `cat ~/.sawtooth/keys/sawtooth.pub`"
+
+## THIS WORKS because it just allows everyone
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY *"
+
+## Add permitted devices by public key
+## THIS NEEDS TO BE DONE IN A DIFFERENT WAY
+## Because otherwise it overwrites your previous policy rather than appending to it
+# sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY __PUBLIC_KEY_OF_PERMITTED_DEVICE__"
+
+## create a transactor role for permitted devices
+sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_devices
+
+## Test some transactions
+## Create a batch of intkey transactions
+intkey create_batch
+
+## Load that intkey batch onto the blockchain
+intkey load
+
+## See those hot, hot blocks
+sawtooth block list
+
+################################################################################
+################################################################################
+
+#############################
+## PLACEHOLDERS TO REPLACE ##
+#############################
+
+## __PUBLIC_KEY_OF_PERMITTED_DEVICE__ - The public key of the transaction processor or whatever you want to allow
+## __YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__ - the user/repo GitHub path to your transaction processor repo (e.g. thegreatsunra/awesome-sawtooth-tp)
+## __YOUR_TRANSACTION_PROCESSOR_REPO_NAME__ - the name (e.g. folder name) of your transaction processor (e.g. awesome-sawtooth-tp)
