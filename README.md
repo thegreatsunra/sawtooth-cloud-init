@@ -66,12 +66,6 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 
 2) Perform a search-and-replace on `scripts/manual-commands.txt`, and replace the following values with the values you used in your `cloud-init` script, and the values provided by Digital Ocean when creating your droplet
 
-* `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_IP__` - the IP address Digital Ocean assigned to your server
-* `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_USERNAME__` - the username of the primary admin user that you created on the server (e.g. `dane`)
-* `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_EMAIL__` - the email address of the primary admin user
-* `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_DOMAIN__` - the domain for the website that you will host on your server (e.g. `thegreatsunra.com`)
-* `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_DOMAIN_NAME__` - the domain you want to assign to your server (e.g. `swearengen.thegreatsunra.com`)
-
 3) Save `scripts/manual-commands.txt`
 
 4) Open `scripts/sawtooth-commands.example.txt` in a text editor and **save it as a new file named `sawtooth-commands.txt`**
