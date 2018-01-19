@@ -5,7 +5,7 @@ sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-ap
 sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey-tp-python -u sawtooth-settings-tp -u sawtooth-identity-tp
 
 ## Allow yo'self to be yo'self
-sudo -u sawtooth sawset proposal create -k /home/sawtooth/.sawtooth/keys/sawtooth.priv sawtooth.identity.allowed_keys=`cat /home/sawtooth/.sawtooth/keys/sawtooth.pub`
+sudo -u sawtooth sawset proposal create --key /home/sawtooth/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8080 sawtooth.identity.allowed_keys=`cat /home/sawtooth/.sawtooth/keys/sawtooth.pub`
 
 ## Create a batch of intkey transactions
 intkey create_batch
