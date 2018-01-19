@@ -26,7 +26,12 @@ sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey
 sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
 
 ## Add permitted devices by public key
-sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY __PUBLIC_KEY_OF_PERMITTED_DEVICE__"
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY `cat ~/.sawtooth/keys/sawtooth.pub`"
+
+## Add permitted devices by public key
+## THIS NEEDS TO BE DONE IN A DIFFERENT WAY
+## Because otherwise it overwrites your previous policy rather than appending to it
+# sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY __PUBLIC_KEY_OF_PERMITTED_DEVICE__"
 
 ## create a transactor role for permitted devices
 sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_devices
