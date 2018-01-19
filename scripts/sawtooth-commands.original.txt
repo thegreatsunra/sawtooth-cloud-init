@@ -1,3 +1,21 @@
+## Get your public key for adding to GitHub
+sudo -u sawtooth cat /home/sawtooth/.ssh/id_rsa.pub
+
+## Copy/paste the output from the command above into your transaction processor's GitHub repo
+
+## Clone your transaction processor repo
+cd /home/sawtooth
+sudo -u sawtooth git clone __YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__
+
+## Build sawtooth-core
+cd /home/sawtooth/sawtooth-core && sudo -u sawtooth git checkout tags/v1.0.0rc6 -b tags/v1.0.0rc6 && cd sdk/javascript && npm install && cd /home/sawtooth
+
+## Put sawtooth-core's Javascript SDK in your transaction processor
+sudo -u sawtooth cp -R /home/sawtooth/sawtooth-core/sdk/javascript /home/sawtooth/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/
+
+## Build your transaction processor
+cd /home/sawtooth/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && yarn
+
 ## Start Sawtooth services
 sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-api && sudo systemctl start sawtooth-intkey-tp-python && sudo systemctl start sawtooth-settings-tp && sudo systemctl start sawtooth-identity-tp
 
@@ -32,3 +50,5 @@ sawtooth block list
 #############################
 
 ## __PUBLIC_KEY_OF_PERMITTED_DEVICE__ - The public key of the transaction processor or whatever you want to allow
+## __YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__ - the URL of your transaction processor repo (e.g. https://github.com/thegreatsunra/awesome-sawtooth-tp.git)
+## __YOUR_TRANSACTION_PROCESSOR_REPO_NAME__ - the name (e.g. folder name) of your transaction processor (e.g. awesome-sawtooth-tp)
