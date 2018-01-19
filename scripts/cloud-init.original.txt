@@ -24,8 +24,8 @@ packages:
   - software-properties-common
   - zsh
 users:
-  - name: __username__
-    gecos: __full_name__
+  - name: sawtooth
+    gecos: Professor Sawtooth
     ssh-authorized-keys:
 ##    SSH keys
       - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== __email@domain.tld__
@@ -66,7 +66,7 @@ runcmd:
 ## Add a comment that we're gonna add some things below:
   - sed -i -e '$a# Added by cloud-config init process' /etc/ssh/sshd_config
 ## Restrict SSH access to only our one allowed user:
-  - sed -i -e '$aAllowUsers __username__' /etc/ssh/sshd_config
+  - sed -i -e '$aAllowUsers sawtooth' /etc/ssh/sshd_config
 ## Disable AllowTcpForwarding:
   - sed -i -e '$aAllowTcpForwarding no' /etc/ssh/sshd_config
 ## Disable compression:
@@ -129,7 +129,7 @@ runcmd:
   - echo 'CHANGING PASSWDS'
   - printf '=======\n\n'
   - echo "root:__temporary_password_change_me_immediately__"|chpasswd
-  - echo "__username__:__temporary_password_change_me_immediately__"|chpasswd
+  - echo "sawtooth:__temporary_password_change_me_immediately__"|chpasswd
 
 ##############
 ## TIMEZONE ##
@@ -325,8 +325,6 @@ power_state:
 #############################
 ## PLACEHOLDERS TO REPLACE ##
 #############################
-## __username__ - the username of the primary admin user that will be created on the server (e.g. dane)
-## __full_name__ - the full name of the primary admin user (e.g. Dane Petersen)
 ## __email@domain.tld__ - the email address of the primary admin user
 ## __domain.tld__ - the domain for your website that will be hosted by nginx (e.g. thegreatsunra.com)
 ## __temporary_password_change_me_immediately__ - a temporary password that you will change immediately after logging into the server
