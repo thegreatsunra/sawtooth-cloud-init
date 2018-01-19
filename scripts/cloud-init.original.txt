@@ -13,6 +13,7 @@ packages:
   - g++
   - git
   - grc
+  - htop
   - language-pack-en-base
   - libpam-tmpdir
   - logwatch
@@ -266,6 +267,33 @@ runcmd:
   - printf '=======\n\n'
   - curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
   - apt install -y nodejs
+
+#######################
+## SETTING UP GITHUB ##
+#######################
+  - printf '\n\n=======\n'
+  - echo 'SETTING UP GITHUB'
+  - printf '=======\n\n'
+  - sudo -u sawtooth ssh-keygen -t rsa -N "" -b 4096 -C "__email@domain.tld__" -f /home/sawtooth/.ssh/id_rsa
+
+###########################
+## CLONING SAWTOOTH CORE ##
+###########################
+  - printf '\n\n=======\n'
+  - echo 'SETTING UP GITHUB'
+  - printf '=======\n\n'
+  - sudo -u sawtooth git clone https://github.com/hyperledger/sawtooth-core.git /home/sawtooth/sawtooth-core
+
+###########################
+## INSTALLING YARN ##
+###########################
+  - printf '\n\n=======\n'
+  - echo 'INSTALLING YARN'
+  - printf '=======\n\n'
+  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  - apt update -yq
+  - apt install -y yarn
 
 #####################
 ## INSTALL UPDATES ##
