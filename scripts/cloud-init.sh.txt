@@ -10,11 +10,13 @@ packages:
   - denyhosts
   - dialog
   - fail2ban
+  - g++
   - git
   - grc
   - language-pack-en-base
   - libpam-tmpdir
   - logwatch
+  - make
   - nmap
   - psad
   - rkhunter
@@ -254,6 +256,15 @@ runcmd:
 # generate validator keys
   - sawadm keygen
 # now you should be able to start all the things
+
+#####################
+## INSTALLING NODE ##
+#####################
+  - printf '\n\n=======\n'
+  - echo 'INSTALLING NODE'
+  - printf '=======\n\n'
+  - curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+  - apt install -y nodejs
 
 #####################
 ## INSTALL UPDATES ##
