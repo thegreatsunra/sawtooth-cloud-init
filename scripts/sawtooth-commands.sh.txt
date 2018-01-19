@@ -7,6 +7,14 @@ sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey
 ## Allow yo'self to be yo'self
 sudo -u sawtooth sawset proposal create --key /home/sawtooth/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8080 sawtooth.identity.allowed_keys=`cat /home/sawtooth/.sawtooth/keys/sawtooth.pub`
 
+## Add permitted devices by public key
+sudo -u sawtooth sawtooth identity policy create --key /home/sawtooth/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8080 permitted_devices "PERMIT_KEY 
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+## create a transactor role for permitted devices
+sudo -u sawtooth sawtooth identity role create --key /home/sawtooth/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8080 transactor permitted_devices
+
+## Test some transactions
 ## Create a batch of intkey transactions
 intkey create_batch
 
