@@ -4,17 +4,16 @@ cat ~/.ssh/id_rsa.pub
 ## Copy/paste the output from the command above into your transaction processor's GitHub repo
 
 ## Clone your transaction processor repo
-cd ~
-git clone git@github.com:__YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__.git
+cd ~ && git clone git@github.com:__YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__.git
 
 ## Build sawtooth-core
 cd ~/sawtooth-core && git checkout tags/v1.0.0rc6 -b tags/v1.0.0rc6 && cd sdk/javascript && npm install && cd ~
 
-## Put sawtooth-core's Javascript SDK in your transaction processor
-cp -R ~/sawtooth-core/sdk/javascript ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/
+## Put sawtooth-core in your transaction processor
+cp -r ~/sawtooth-core ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/
 
 ## Build your transaction processor
-cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && yarn
+cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && npm install
 
 ## Start Sawtooth services
 sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-api && sudo systemctl start sawtooth-intkey-tp-python && sudo systemctl start sawtooth-settings-tp && sudo systemctl start sawtooth-identity-tp
