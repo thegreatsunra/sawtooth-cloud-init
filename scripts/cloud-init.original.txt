@@ -255,7 +255,7 @@ runcmd:
   - sudo -u sawtooth sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
 ## apply genesis block
   - sawadm genesis /home/sawtooth/config-genesis.batch
-## generate validator keys
+## generate validator keys at /etc/sawtooth/keys/validator.priv & /etc/sawtooth/keys/validator.pub
   - sawadm keygen
 ## now you should be able to start all the things
 
