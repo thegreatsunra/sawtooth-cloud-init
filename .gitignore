@@ -2,6 +2,9 @@
 .#*
 .DS_Store
 
+cloud-init.txt
+manual-commands.txt
+sawtooth-commands.txt
 thumbs.db
 *.log*
 *.zip*

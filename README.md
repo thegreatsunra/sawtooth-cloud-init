@@ -28,7 +28,9 @@ ssh-keygen -t rsa -b 4096 -C "email@domain.tld"
 pbcopy < ~/.ssh/id_rsa.pub
 ```
 
-4) Open `./scripts/cloud-init.sh.txt` in a text editor and replace the placeholder SSH key (around line 30) with the contents of your clipboard
+4) Open `scripts/cloud-init.example.txt` in a text editor and **save it as a new file named `cloud-init.txt`**
+
+5) Replace the placeholder SSH key (around line 30) with the contents of your clipboard
 
 ```bash
       - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== __email@domain.tld__
@@ -36,7 +38,7 @@ pbcopy < ~/.ssh/id_rsa.pub
 
 Be careful not to delete the indentation or `- ` at the beginning of the line, as `cloud-init` needs them to recognize the command
 
-5) Search within `./scripts/cloud-init.sh.txt` and replace the following placeholder strings with your desired values:
+6) Search within `scripts/cloud-init.txt` and replace the following placeholder strings with your desired values:
 
 * `__username__` - the username of the primary admin user that will be created on the server (e.g. `dane`)
 * `__full_name__` - the full name of the primary admin user (e.g. `Dane Petersen`)
@@ -44,7 +46,7 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 * `__domain.tld__` - the domain for your website that will be hosted by nginx (e.g. `thegreatsunra.com`)
 * `__temporary_password_change_me_immediately__` - a temporary, throwaway password that will live forever on your server in your `cloud-init` script and **you will immediately change upon logging into the server**
 
-6) Save `./scripts/cloud-init.sh.txt`, select all, and copy it to your clipboard
+7) Save `scripts/cloud-init.txt`, select all, and copy it to your clipboard
 
 #### Digital Ocean
 
@@ -52,7 +54,7 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 
 2) Create a new droplet
 
-3) Under "Select additional options" check the box for "User data" and paste in the contents of `./scripts/cloud-init.sh.txt`
+3) Under "Select additional options" check the box for "User data" and paste in the contents of `scripts/cloud-init.txt`
 
 4) Click "Create" and wait a few moments as Digital Ocean creates your new droplet
 
@@ -60,9 +62,9 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 
 #### Prepare manual commands
 
-1) Open `./scripts/manual-commands.sh.txt` in a text editor
+1) Open `scripts/manual-commands.example.txt` in a text editor and **save it as a new file named `manual-commands.txt`**
 
-2) Perform a search-and-replace on `./scripts/manual-commands.sh.txt`, and replace the following values with the values you used in your `cloud-init` script, and the values provided by Digital Ocean when creating your droplet
+2) Perform a search-and-replace on `scripts/manual-commands.txt`, and replace the following values with the values you used in your `cloud-init` script, and the values provided by Digital Ocean when creating your droplet
 
 * `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_IP__` - the IP address Digital Ocean assigned to your server
 * `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_USERNAME__` - the username of the primary admin user that you created on the server (e.g. `dane`)
@@ -70,7 +72,13 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 * `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_DOMAIN__` - the domain for the website that you will host on your server (e.g. `thegreatsunra.com`)
 * `__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_DOMAIN_NAME__` - the domain you want to assign to your server (e.g. `swearengen.thegreatsunra.com`)
 
-3) Save `./scripts/manual-commands.sh.txt`
+3) Save `scripts/manual-commands.txt`
+
+4) Open `scripts/sawtooth-commands.example.txt` in a text editor and **save it as a new file named `sawtooth-commands.txt`**
+
+5) Perform a search-and-replace on `scripts/sawtooth-commands.txt`, and replace any `__PLACEHOLDER__` values with their actual values
+
+6) Save `scripts/sawtooth-commands.txt`
 
 #### SSH
 
@@ -80,9 +88,9 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 ssh username@ip.address.of.server
 ```
 
-2) Go line-by-line through `./scripts/manual-commands.sh.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
+2) Go line-by-line through `scripts/manual-commands.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
 
-3) Go line-by-line through `./scripts/sawtooth-commands.sh.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
+3) Go line-by-line through `scripts/sawtooth-commands.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
 
 ## License
 
