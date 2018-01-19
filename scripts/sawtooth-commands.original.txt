@@ -1,20 +1,20 @@
 ## Get your public key for adding to GitHub
-cat /home/sawtooth/.ssh/id_rsa.pub
+cat ~/.ssh/id_rsa.pub
 
 ## Copy/paste the output from the command above into your transaction processor's GitHub repo
 
 ## Clone your transaction processor repo
-cd /home/sawtooth
+cd ~
 git clone git@github.com:__YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__.git
 
 ## Build sawtooth-core
-cd /home/sawtooth/sawtooth-core && git checkout tags/v1.0.0rc6 -b tags/v1.0.0rc6 && cd sdk/javascript && npm install && cd /home/sawtooth
+cd ~/sawtooth-core && git checkout tags/v1.0.0rc6 -b tags/v1.0.0rc6 && cd sdk/javascript && npm install && cd ~
 
 ## Put sawtooth-core's Javascript SDK in your transaction processor
-cp -R /home/sawtooth/sawtooth-core/sdk/javascript /home/sawtooth/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/
+cp -R ~/sawtooth-core/sdk/javascript ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/
 
 ## Build your transaction processor
-cd /home/sawtooth/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && yarn
+cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && yarn
 
 ## Start Sawtooth services
 sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-api && sudo systemctl start sawtooth-intkey-tp-python && sudo systemctl start sawtooth-settings-tp && sudo systemctl start sawtooth-identity-tp
@@ -23,14 +23,13 @@ sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-ap
 sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey-tp-python -u sawtooth-settings-tp -u sawtooth-identity-tp
 
 ## Allow yo'self to be yo'self
-sawset proposal create --key /home/sawtooth/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat /home/sawtooth/.sawtooth/keys/sawtooth.pub`
+sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
 
 ## Add permitted devices by public key
-sawtooth identity policy create --key /home/sawtooth/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY 
-__PUBLIC_KEY_OF_PERMITTED_DEVICE__"
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY __PUBLIC_KEY_OF_PERMITTED_DEVICE__"
 
 ## create a transactor role for permitted devices
-sawtooth identity role create --key /home/sawtooth/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_devices
+sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_devices
 
 ## Test some transactions
 ## Create a batch of intkey transactions
