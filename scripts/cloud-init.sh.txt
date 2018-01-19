@@ -166,8 +166,8 @@ runcmd:
 #  - ufw deny ssh
 ## Allow requests on updated SSH port:
 #  - ufw allow 4444/tcp
-## Allow requests on 8080:
-  - ufw allow 8080
+## Allow requests on 8008:
+  - ufw allow 8008
 ## Turn on logging:
   - ufw logging on
 ## Enable uncomplicated firewall now that we have it configured:
@@ -245,8 +245,8 @@ runcmd:
   - apt update -y
   - apt install -y sawtooth python3-sawtooth-identity
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
-## allow connections from outside on port 8080
-  - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --bind 0.0.0.0:8080/' /etc/default/sawtooth-rest-api
+## allow connections from outside on port 8008
+  - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --bind 0.0.0.0:8008/' /etc/default/sawtooth-rest-api
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
