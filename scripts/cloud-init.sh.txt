@@ -245,6 +245,8 @@ runcmd:
   - apt update -y
   - apt install -y sawtooth python3-sawtooth-identity
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
+## allow connections from outside on port 8080
+  - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --bind 0.0.0.0:8080/' /etc/default/sawtooth-rest-api
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
