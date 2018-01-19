@@ -13,7 +13,7 @@ cd ~/sawtooth-core && git checkout tags/v1.0.0rc6 -b tags/v1.0.0rc6 && cd sdk/ja
 cp -r ~/sawtooth-core ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/
 
 ## Build your transaction processor
-cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && npm install
+cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && npm install && cd ~
 
 ## Start Sawtooth services
 sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-api && sudo systemctl start sawtooth-intkey-tp-python && sudo systemctl start sawtooth-settings-tp && sudo systemctl start sawtooth-identity-tp
