@@ -331,5 +331,4 @@ power_state:
 ## PLACEHOLDERS TO REPLACE ##
 #############################
 ## __email@domain.tld__ - the email address of the primary admin user
-## __domain.tld__ - the domain for your website that will be hosted by nginx (e.g. thegreatsunra.com)
 ## __temporary_password_change_me_immediately__ - a temporary password that you will change immediately after logging into the server
