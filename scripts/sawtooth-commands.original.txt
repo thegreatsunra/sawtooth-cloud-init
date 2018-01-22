@@ -29,6 +29,7 @@ sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0
 ## THIS DOESN'T WORK because of whatever
 # sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY `cat ~/.sawtooth/keys/sawtooth.pub`"
 
+## Add all permitted devices
 ## THIS WORKS because it just allows everyone
 sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY *"
 

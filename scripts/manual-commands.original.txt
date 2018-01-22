@@ -2,10 +2,10 @@
 ## MANUAL COMMANDS ##
 #####################
 
-## Login to new server:
+## Log in to your new server:
 ssh sawtooth@__SERVER_IP__
 
-## Monitor cloud-init script progress
+## Monitor cloud-init script progress (useful for hunting errors in cloud-init)
 tail -fn+1 /var/log/cloud-init-output.log
 
 ## Install oh-my-zsh
