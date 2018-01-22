@@ -1,16 +1,17 @@
+#######################
+## SAWTOOTH COMMANDS ##
+#######################
+
 ## Get your public key for adding to GitHub
 cat ~/.ssh/id_rsa.pub
 
-## Copy/paste the output from the command above into your transaction processor's GitHub repo
+## Copy/paste the output from the command above into a new deploy key for your transaction processor's GitHub repo
 
 ## Clone your transaction processor repo
 cd ~ && git clone git@github.com:__YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__.git
 
-## Build sawtooth-core
-cd ~/sawtooth-core && git checkout tags/v1.0.0rc6 -b tags/v1.0.0rc6 && cd sdk/javascript && npm install && cd ~
-
 ## Put sawtooth-core in your transaction processor
-cp -r ~/sawtooth-core ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/
+ln -s ~/sawtooth-core ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/sawtooth-core
 
 ## Build your transaction processor
 cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && npm install && cd ~
