@@ -3,7 +3,7 @@
 #####################
 
 ## Login to new server:
-ssh __REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_USERNAME__@__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_IP__
+ssh sawtooth@__REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_IP__
 
 ## Monitor cloud-init script progress
 tail -fn+1 /var/log/cloud-init-output.log
@@ -13,7 +13,7 @@ grc tail -fn+1 /var/log/cloud-init-output.log
 
 ## Change passwords
 sudo passwd root
-sudo passwd __REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_USERNAME__
+sudo passwd sawtooth
 
 ## Install and configure sendmail
 sudo apt install -yq sendmail sendmail-bin
@@ -51,7 +51,6 @@ sudo chattr +i /etc/hostname
 ## PLACEHOLDERS TO REPLACE ##
 #############################
 ## __REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_IP__ - the IP address Digital Ocean assigned to your server
-## __REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_USERNAME__ - the username of the primary admin user that will be created on the server (e.g. dane)
 ## __REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_EMAIL__ - the email address of the primary admin user
 ## __REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_DOMAIN__ - the domain for your website that will be hosted by nginx (e.g. thegreatsunra.com)
 ## __REPLACE_THIS_TEXT_WITH_YOUR_ACTUAL_SERVER_DOMAIN_NAME__ - the domain for your server (e.g. swearengen.thegreatsunra.com)
