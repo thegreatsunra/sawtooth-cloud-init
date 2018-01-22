@@ -283,7 +283,7 @@ runcmd:
   - echo 'BUILDING SAWTOOTH CORE'
   - printf '=======\n\n'
   - cd /home/sawtooth
-  - sudo -u sawtooth curl https://github.com/hyperledger/sawtooth-core/archive/v1.0.0rc6.zip
+  - sudo -u sawtooth curl -LJO https://github.com/hyperledger/sawtooth-core/archive/v1.0.0rc6.zip
   - sudo -u sawtooth unzip sawtooth-core-1.0.0rc6.zip
   - sudo -u sawtooth mv sawtooth-core-1.0.0rc6 sawtooth-core
   - cd /home/sawtooth/sawtooth-core/sdk/javascript
