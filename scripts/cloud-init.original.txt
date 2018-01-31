@@ -252,8 +252,10 @@ runcmd:
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
 ## create genesis block using signing keys
+## do this for validator master, but not validator node
   - sudo -u sawtooth sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
 ## apply genesis block
+## do this for validator master, but not validator node
   - sawadm genesis /home/sawtooth/config-genesis.batch
 ## generate validator keys at /etc/sawtooth/keys/validator.priv & /etc/sawtooth/keys/validator.pub
   - sawadm keygen
