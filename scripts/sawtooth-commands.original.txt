@@ -8,6 +8,8 @@ sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-ap
 ## Confirm Sawtooth services started successfully
 sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey-tp-python -u sawtooth-settings-tp -u sawtooth-identity-tp
 
+################################################################################
+
 ## Allow yo'self to be yo'self
 sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
 
