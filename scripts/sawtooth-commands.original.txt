@@ -27,6 +27,13 @@ sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http:
 ## create a transactor role for permitted devices
 sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_devices
 
+## Add all permitted nodes
+## THIS WORKS because it just allows everyone
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_nodes "PERMIT_KEY *"
+
+## create a network role for permitted nodes
+sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 network permitted_nodes
+
 
 ################################################################################
 
