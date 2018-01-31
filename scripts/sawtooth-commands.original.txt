@@ -2,25 +2,13 @@
 ## SAWTOOTH COMMANDS ##
 #######################
 
-## Get your public key for adding to GitHub
-cat ~/.ssh/id_rsa.pub
-
-## Copy/paste the output from the command above into a new deploy key for your transaction processor's GitHub repo
-
-## Clone your transaction processor repo
-cd ~ && git clone git@github.com:__YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__.git
-
-## Put sawtooth-core in your transaction processor
-ln -s ~/sawtooth-core ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/sawtooth-core
-
-## Build your transaction processor
-cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && npm install && cd ~
-
 ## Start Sawtooth services
 sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-api && sudo systemctl start sawtooth-intkey-tp-python && sudo systemctl start sawtooth-settings-tp && sudo systemctl start sawtooth-identity-tp
 
 ## Confirm Sawtooth services started successfully
 sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey-tp-python -u sawtooth-settings-tp -u sawtooth-identity-tp
+
+################################################################################
 
 ## Allow yo'self to be yo'self
 sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
@@ -29,6 +17,7 @@ sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0
 ## THIS DOESN'T WORK because of whatever
 # sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY `cat ~/.sawtooth/keys/sawtooth.pub`"
 
+## Add all permitted devices
 ## THIS WORKS because it just allows everyone
 sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY *"
 
@@ -39,6 +28,32 @@ sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http:
 
 ## create a transactor role for permitted devices
 sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_devices
+
+## Add all permitted nodes
+## THIS WORKS because it just allows everyone
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_nodes "PERMIT_KEY *"
+
+## create a network role for permitted nodes
+sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 network permitted_nodes
+
+## list all roles
+sawtooth identity role list
+
+## list all policies (if this command doesn't error out, that is)
+sawtooth identity policy list
+
+################################################################################
+
+## Get your public key for adding to GitHub
+cat ~/.ssh/id_rsa.pub
+
+## Copy/paste the output from the command above into a new deploy key for your transaction processor's GitHub repo
+
+## Clone your transaction processor repo
+cd ~ && git clone git@github.com:__YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__.git
+
+## Build your transaction processor
+cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && npm install && cd ~
 
 ## Test some transactions
 ## Create a batch of intkey transactions
