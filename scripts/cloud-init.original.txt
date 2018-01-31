@@ -248,6 +248,22 @@ runcmd:
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
 ## allow connections from outside on port 8008
   - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --verbose --bind 0.0.0.0:8008/' /etc/default/sawtooth-rest-api
+## configure validator to trust network connections and allow dynamic peering from anyone
+  - sed -i -e '/^#SAWTOOTH_VALIDATOR_ARGS=/s/^.*$/SAWTOOTH_VALIDATOR_ARGS=--verbose/' /etc/default/sawtooth-validator
+#  - cp /etc/sawtooth/validator.toml.example /etc/sawtooth/validator.toml
+#  - sed -i -e 's/"network:tcp:\/\/127\.0\.0\.1:8800"/"network:tcp:\/\/0\.0\.0\.0:8800"/' /etc/sawtooth/validator.toml
+#  - sed -i -e 's/peering = "static"/peering = "dynamic"/' /etc/sawtooth/validator.toml
+#  - sed -i -e 's/peers = \["tcp:\/\/127\.0\.0\.1:8801"\]/peers = \["tcp:\/\/1\.1\.1\.1:8800"\]/' /etc/sawtooth/validator.toml
+## do this for validator node, but not validator master
+##  - sed -i -e 's/seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/seeds = \["tcp:\/\/1\.1\.1\.1:8800"\]/' /etc/sawtooth/validator.toml
+## do this for validator master, but not validator node
+#  - sed -i -e 's/seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/# seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/' /etc/sawtooth/validator.toml
+#  - sed -i -e 's/endpoint = "tcp:\/\/127\.0\.0\.1:8800"/endpoint = "tcp:\/\/0\.0\.0\.0:8800"/' /etc/sawtooth/validator.toml
+#  - sed -i -e 's/^\[permissions\]/# \[permissions\]/' /etc/sawtooth/validator.toml
+#  - sed -i -e 's/^network_public_key =/# network_public_key =/' /etc/sawtooth/validator.toml
+#  - sed -i -e 's/^network_private_key =/# network_private_key =/' /etc/sawtooth/validator.toml
+#  - sed -i -e 's/^transactor = "policy\.example"/# transactor = "policy\.example"/' /etc/sawtooth/validator.toml
+#  - sed -i -e 's/^"transactor\.transaction_signer" = "policy\.example"/# "transactor\.transaction_signer" = "policy\.example"/' /etc/sawtooth/validator.toml
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
