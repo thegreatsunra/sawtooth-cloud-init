@@ -76,10 +76,10 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 
 #### SSH
 
-1) SSH into your new server using the username you chose and the IP address provided by Digital Ocean
+1) SSH into your new server using the user `sawtooth` and the IP address provided by Digital Ocean
 
 ```bash
-ssh username@ip.address.of.server
+ssh sawtooth@__SERVER_IP__
 ```
 
 2) Go line-by-line through `scripts/manual-commands.txt`, pasting each command into the Terminal to run it on your server like some kind of animal

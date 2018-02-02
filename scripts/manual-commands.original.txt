@@ -35,19 +35,7 @@ sudo sendmailconfig
 
 ################################################################################
 
-## UPDATE YOUR DNS WITH HOSTNAME DOMAIN FOR SERVER
-
-## Create the hostname
-lsattr /etc/hostname && sudo chattr -i /etc/hostname
-sudo sh -c "echo '__SERVER_DOMAIN__' > /etc/hostname"
-sudo hostname -F /etc/hostname
-sudo chattr +i /etc/hostname
-
-################################################################################
-################################################################################
-
 #############################
 ## PLACEHOLDERS TO REPLACE ##
 #############################
 ## __SERVER_IP__ - the IP address Digital Ocean assigned to your server
-## __SERVER_DOMAIN__ - the domain for your server (e.g. swearengen.thegreatsunra.com)
