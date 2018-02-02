@@ -290,6 +290,14 @@ runcmd:
   - curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
   - apt install -y nodejs
 
+####################
+## INSTALLING PM2 ##
+####################
+  - printf '\n\n=======\n'
+  - echo 'INSTALLING PM2'
+  - printf '=======\n\n'
+  - npm install -g pm2
+
 #######################
 ## SETTING UP GITHUB ##
 #######################
