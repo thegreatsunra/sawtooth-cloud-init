@@ -169,6 +169,10 @@ runcmd:
 #  - ufw allow 4444/tcp
 ## Allow requests on 8008:
   - ufw allow 8008
+## Allow requests on 4004:
+  - ufw allow 4004/tcp
+## Allow requests on 8800:
+  - ufw allow 8800/tcp
 ## Turn on logging:
   - ufw logging on
 ## Enable uncomplicated firewall now that we have it configured:
