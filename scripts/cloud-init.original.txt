@@ -253,7 +253,7 @@ runcmd:
 ## allow connections from outside on port 8008
   - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --verbose --bind 0.0.0.0:8008/' /etc/default/sawtooth-rest-api
 ## configure validator to trust network connections and allow dynamic peering from anyone
-  - sed -i -e '/^#SAWTOOTH_VALIDATOR_ARGS=/s/^.*$/SAWTOOTH_VALIDATOR_ARGS=--verbose/' /etc/default/sawtooth-validator
+  - sed -i -e '/^#SAWTOOTH_VALIDATOR_ARGS=/s/^.*$/SAWTOOTH_VALIDATOR_ARGS=--verbose --scheduler parallel/' /etc/default/sawtooth-validator
 #  - cp /etc/sawtooth/validator.toml.example /etc/sawtooth/validator.toml
 #  - sed -i -e 's/"network:tcp:\/\/127\.0\.0\.1:8800"/"network:tcp:\/\/0\.0\.0\.0:8800"/' /etc/sawtooth/validator.toml
 #  - sed -i -e 's/peering = "static"/peering = "dynamic"/' /etc/sawtooth/validator.toml
