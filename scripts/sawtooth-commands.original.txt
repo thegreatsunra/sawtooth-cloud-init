@@ -22,8 +22,10 @@ sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http:
 ## Add permitted clients to a transactor role to give them transactor permissions
 sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_clients
 
-## create a transactor role for permitted devices
-sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_devices
+## Add policies for yourself and all other permitted clients
+## Note that this overwrites any existing policies with the same name
+## If you forget to add your own public key here, you will lock yourself out
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_clients "PERMIT_KEY __PUBLIC_KEY_OF_LOCAL_USER__" "PERMIT_KEY __PUBLIC_KEY_OF_FIRST_CLIENT__" "PERMIT_KEY __PUBLIC_KEY_OF_SECOND_CLIENT__"
 
 ## Add all permitted nodes
 ## THIS WORKS because it just allows everyone
