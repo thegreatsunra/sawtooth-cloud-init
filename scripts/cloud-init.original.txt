@@ -277,6 +277,8 @@ runcmd:
   - sed -i -e 's/peering = "static"/peering = "dynamic"/' /etc/sawtooth/validator.toml
 ## comment out peers because we're using dynamic network discovery but also reset the default value because it's wrong
   - sed -i -e 's/peers = \["tcp:\/\/127\.0\.0\.1:8801"\]/# peers = ["tcp:\/\/0\.0\.0\.0:8800"]/' /etc/sawtooth/validator.toml
+## comment out seeds because we only need it for peer nodes and change the default value because it's wrong
+  - sed -i -e 's/seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/# seeds = ["tcp:\/\/0\.0\.0\.0:8800"]/' /etc/sawtooth/validator.toml
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
 ## create genesis block using signing keys
