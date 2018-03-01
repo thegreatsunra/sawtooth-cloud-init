@@ -320,6 +320,16 @@ runcmd:
   - sudo -u sawtooth npm install
   - cd /home/sawtooth
 
+#####################################
+## INSTALLING ZEROMQ KEY GENERATOR ##
+#####################################
+
+  - cd /home/sawtooth
+  - sudo -u sawtooth git clone https://github.com/thegreatsunra/zeromq-keypair-generator.git
+  - cd zeromq-keypair-generator
+  - sudo -u sawtooth npm install
+  - cd /home/sawtooth
+
 #######################
 ## SETTING UP GITHUB ##
 #######################
