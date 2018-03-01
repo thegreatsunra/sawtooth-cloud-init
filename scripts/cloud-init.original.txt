@@ -269,6 +269,10 @@ runcmd:
 ## copy the validator config example to a new file
   - cp /etc/sawtooth/validator.toml.example /etc/sawtooth/validator.toml
   - chmod 777 /etc/sawtooth/validator.toml
+## set network server to 0.0.0.0 for localhost on digital ocean
+  - sed -i -e 's/"network:tcp:\/\/127\.0\.0\.1:8800"/"network:tcp:\/\/0\.0\.0\.0:8800"/' /etc/sawtooth/validator.toml
+## set component server to 0.0.0.0 for localhost on digital ocean
+  - sed -i -e 's/"component:tcp:\/\/127\.0\.0\.1:4004"/"component:tcp:\/\/0\.0\.0\.0:4004"/' /etc/sawtooth/validator.toml
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
 ## create genesis block using signing keys
