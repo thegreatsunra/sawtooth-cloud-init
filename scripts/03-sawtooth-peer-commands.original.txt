@@ -8,3 +8,7 @@ ip addr show eth0 | grep -Eo 'inet [^/]+'
 ## Change endpoint = "tcp://127.0.0.1:8800" to endpoint = "tcp://__SERVER_IP_ADDRESS__:8800"
 sudo sed -i -e 's/endpoint = "tcp:\/\/127\.0\.0\.1:8800"/endpoint = "tcp:\/\/__SERVER_IP_ADDRESS_WITH_ESCAPED_DOTS__:8800"/' /etc/sawtooth/validator.toml
 
+## Copy IP address from seed node server
+## Uncomment seeds line and add the IP address of the seed node server
+sudo sed -i -e 's/# seeds = \["tcp:\/\/0\.0\.0\.0:8800"\]/seeds = ["__SEED_IP_ADDRESS_WITH_ESCAPED_DOTS__"]/' /etc/sawtooth/validator.toml
+
