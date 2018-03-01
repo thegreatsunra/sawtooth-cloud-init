@@ -331,6 +331,23 @@ runcmd:
   - cd /home/sawtooth
 
 #######################
+## INSTALLING INTKEY ##
+#######################
+## Clone and install the Node intkey transaction processor
+  - cd /home/sawtooth
+  - sudo -u sawtooth git clone https://github.com/thegreatsunra/intkey-tp-js.git
+  - cd intkey-tp-js
+  - sudo -u sawtooth npm install
+  - cd /home/sawtooth
+
+## Clone and install the Node intkey transactor client
+  - cd /home/sawtooth
+  - sudo -u sawtooth git clone https://github.com/thegreatsunra/intkey-client-js.git
+  - cd intkey-client-js
+  - sudo -u sawtooth npm install
+  - cd /home/sawtooth
+
+#######################
 ## SETTING UP GITHUB ##
 #######################
   - printf '\n\n=======\n'
