@@ -49,6 +49,14 @@ sawtooth identity policy list
 
 ################################################################################
 
+## Long-run the intkey transaction processor with pm2
+cd ~/intkey-tp-js && pm2 start index.js && cd ~
+
+## Long-run the proxy with pm2
+cd ~/sawtooth-rest-api-proxy && pm2 start index.js && cd ~
+
+################################################################################
+
 ## Get your public key for adding to GitHub
 cat ~/.ssh/id_rsa.pub
 
