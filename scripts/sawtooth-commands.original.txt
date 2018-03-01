@@ -10,21 +10,17 @@ sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settin
 
 ################################################################################
 
-## Allow yo'self to be yo'self
+## Grant yourself access
 sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
 
-## Add permitted devices by public key
-## THIS DOESN'T WORK because of whatever
-# sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY `cat ~/.sawtooth/keys/sawtooth.pub`"
+## Echo your public key for granting yourself access via identity policy
+cat ~/.sawtooth/keys/sawtooth.pub
 
-## Add all permitted devices
-## THIS WORKS because it just allows everyone
-sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY *"
+## Add an identity policy for yourself
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_clients "PERMIT_KEY __PUBLIC_KEY_OF_LOCAL_USER__"
 
-## Add permitted devices by public key
-## THIS NEEDS TO BE DONE IN A DIFFERENT WAY
-## Because otherwise it overwrites your previous policy rather than appending to it
-# sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_devices "PERMIT_KEY __PUBLIC_KEY_OF_PERMITTED_DEVICE__"
+## Add permitted clients to a transactor role to give them transactor permissions
+sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_clients
 
 ## create a transactor role for permitted devices
 sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_devices
