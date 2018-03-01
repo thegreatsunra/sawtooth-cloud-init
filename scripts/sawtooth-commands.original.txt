@@ -107,6 +107,7 @@ sawtooth block list
 ## PLACEHOLDERS TO REPLACE ##
 #############################
 
-## __PUBLIC_KEY_OF_PERMITTED_DEVICE__ - The public key of the transaction processor or whatever you want to allow
-## __YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__ - the user/repo GitHub path to your transaction processor repo (e.g. thegreatsunra/awesome-sawtooth-tp)
-## __YOUR_TRANSACTION_PROCESSOR_REPO_NAME__ - the name (e.g. folder name) of your transaction processor (e.g. awesome-sawtooth-tp)
+## __PUBLIC_KEY_OF_LOCAL_USER__ - The public key of the sawtooth user local to this server
+## __PUBLIC_KEY_OF_FIRST_CLIENT__ - The public key of the transactor client you want to allow
+## __PUBLIC_KEY_OF_SECOND_CLIENT__ - The public key of another transactor client you want to allow
+## __PUBLIC_KEY_OF_INTKEY_CLIENT__ - The public key of your local intkey client
