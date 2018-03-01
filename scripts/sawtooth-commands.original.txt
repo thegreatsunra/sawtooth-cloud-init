@@ -84,21 +84,34 @@ cat ~/.ssh/id_rsa.pub
 
 ## Copy/paste the output from the command above into a new deploy key for your transaction processor's GitHub repo
 
-## Clone your transaction processor repo
-cd ~ && git clone git@github.com:__YOUR_TRANSACTION_PROCESSOR_GITHUB_REPO__.git
+################################################################################
 
-## Build your transaction processor
-cd ~/__YOUR_TRANSACTION_PROCESSOR_REPO_NAME__/ && npm install && cd ~
+## BONUS COMMANDS!
 
-## Test some transactions
-## Create a batch of intkey transactions
-intkey create_batch
+## start all services
+sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
 
-## Load that intkey batch onto the blockchain
-intkey load
+## stop all services
+sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
 
-## See those hot, hot blocks
-sawtooth block list
+## see what the validator is doing
+sudo journalctl -f -u sawtooth-validator
+
+## See what everything is doing
+sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp
+
+## generate validator keys
+sawadm keygen
+
+## force regeneration of validator keys
+sawadm keygen --force
+
+## (DANGER ZONE!) kill your blockchain
+sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-intkey-tp-python sawtooth-settings-tp sawtooth-identity-tp
+sudo rm /var/lib/sawtooth/*
+sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
+sawadm genesis /home/sawtooth/config-genesis.batch
+sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
 
 ################################################################################
 ################################################################################
