@@ -239,14 +239,18 @@ runcmd:
   - apt update -yq
   - DEBIAN_FRONTEND=noninteractive apt install -yq lynis
 
-################################
-## INSTALLING SAWTOOTH STABLE ##
-################################
+#########################
+## INSTALLING SAWTOOTH ##
+#########################
   - printf '\n\n=======\n'
-  - echo 'ADDING APT FOR SAWTOOTH STABLE'
+  - echo 'ADDING APT FOR SAWTOOTH'
   - printf '=======\n\n'
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD
-  - add-apt-repository 'deb http://repo.sawtooth.me/ubuntu/1.0/stable xenial universe' -y
+## Use the following two commands for sawtooth stable
+#  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD
+#  - add-apt-repository 'deb http://repo.sawtooth.me/ubuntu/1.0/stable xenial universe' -y
+## Use the following two commands for sawtooth nightly (instead of stable)
+  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 44FC67F19B2466EA
+  - apt-add-repository "deb http://repo.sawtooth.me/ubuntu/nightly xenial universe" -y
   - apt update -y
   - apt install -y sawtooth python3-sawtooth-identity
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
