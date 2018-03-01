@@ -36,6 +36,11 @@ sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http:
 ## create a network role for permitted nodes
 sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 network permitted_nodes
 
+## Add policies for yourself and all other permitted nodes
+## Note that this overwrites any existing policies with the same name
+## If you forget to add your validator's public key here, you will lock yourself out
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_clients "PERMIT_KEY __PUBLIC_KEY_OF_LOCAL_VALIDATOR__" "PERMIT_KEY __PUBLIC_KEY_OF_FIRST_PEER_VALIDATOR__" "PERMIT_KEY __PUBLIC_KEY_OF_SECOND_PEER_VALIDATOR__"
+
 ## list all roles
 sawtooth identity role list
 
