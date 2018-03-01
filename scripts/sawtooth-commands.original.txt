@@ -57,6 +57,28 @@ cd ~/sawtooth-rest-api-proxy && pm2 start index.js && cd ~
 
 ################################################################################
 
+## Set up the Node intkey transactor client
+# Generate public/private keys and a placeholder Sawtooth validator URL
+# Run as node because it doesn't have permission to write to my folder for some reason
+# Maybe because cloud-init installed it rather than the sawtooth user
+cd ~/intkey-client-js && sudo node init.js
+
+# View your public key (and other stuff, but we really care about the public key)
+cat .env
+
+# Add the public key of your transactor client as an authorized client
+# Be sure to add any other authorized clients, as well as the local sawtooth user's
+# public key, or else they won't have access (and/or you'll lock yourself out)
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_clients "PERMIT_KEY __PUBLIC_KEY_OF_LOCAL_USER__" "PERMIT_KEY __PUBLIC_KEY_OF_FIRST_CLIENT__" "PERMIT_KEY __PUBLIC_KEY_OF_SECOND_CLIENT__" "PERMIT_KEY __PUBLIC_KEY_OF_INTKEY_CLIENT__"
+
+## Create a new value
+node index.js --name foo --verb set --value 42
+
+## Change that value
+node index.js --name foo --verb inc --value 13
+
+################################################################################
+
 ## Get your public key for adding to GitHub
 cat ~/.ssh/id_rsa.pub
 
