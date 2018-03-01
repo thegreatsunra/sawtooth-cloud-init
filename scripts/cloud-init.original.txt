@@ -281,6 +281,8 @@ runcmd:
   - sed -i -e 's/seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/# seeds = ["tcp:\/\/0\.0\.0\.0:8800"]/' /etc/sawtooth/validator.toml
 ## set scheduler to parallel
   - sed -i -e "s/scheduler = 'serial'/scheduler = 'parallel'/" /etc/sawtooth/validator.toml
+## reduce maximum peer connectivity to 5 (because more than 5 crashes the network)
+  - sed -i -e 's/maximum_peer_connectivity = 10/maximum_peer_connectivity = 5/' /etc/sawtooth/validator.toml
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
 ## create genesis block using signing keys
