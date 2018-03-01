@@ -3,10 +3,10 @@
 #######################
 
 ## Start Sawtooth services
-sudo systemctl start sawtooth-validator && sudo systemctl start sawtooth-rest-api && sudo systemctl start sawtooth-intkey-tp-python && sudo systemctl start sawtooth-settings-tp && sudo systemctl start sawtooth-identity-tp
+sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
 
 ## Confirm Sawtooth services started successfully
-sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-intkey-tp-python -u sawtooth-settings-tp -u sawtooth-identity-tp
+sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp
 
 ################################################################################
 
