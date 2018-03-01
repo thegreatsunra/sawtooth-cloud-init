@@ -311,6 +311,15 @@ runcmd:
   - printf '=======\n\n'
   - npm install -g pm2
 
+######################
+## INSTALLING PROXY ##
+######################
+  - cd /home/sawtooth
+  - sudo -u sawtooth git clone https://github.com/thegreatsunra/sawtooth-rest-api-proxy.git
+  - cd sawtooth-rest-api-proxy
+  - sudo -u sawtooth npm install
+  - cd /home/sawtooth
+
 #######################
 ## SETTING UP GITHUB ##
 #######################
