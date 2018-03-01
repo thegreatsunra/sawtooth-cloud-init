@@ -19,3 +19,8 @@ sudo pico /etc/sawtooth/validator.toml
 ## and this line:
 ## network_private_key = 'r&oJ5aQDj4+V]p2:Lz70Eu0x#m%IwzBdP(}&hWM*'
 
+## create genesis block using signing keys
+sudo -u sawtooth sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
+
+## apply genesis block
+sawadm genesis /home/sawtooth/config-genesis.batch
