@@ -266,6 +266,9 @@ runcmd:
   - echo 'CONFIGURING SAWTOOTH VALIDATOR'
   - printf '=======\n\n'
 
+## copy the validator config example to a new file
+  - cp /etc/sawtooth/validator.toml.example /etc/sawtooth/validator.toml
+  - chmod 777 /etc/sawtooth/validator.toml
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
 ## create genesis block using signing keys
