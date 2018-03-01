@@ -257,7 +257,15 @@ runcmd:
 ## allow connections from outside on port 8008
   - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --verbose --bind 0.0.0.0:8008/' /etc/default/sawtooth-rest-api
 ## configure validator to trust network connections and allow dynamic peering from anyone
-  - sed -i -e '/^#SAWTOOTH_VALIDATOR_ARGS=/s/^.*$/SAWTOOTH_VALIDATOR_ARGS=--verbose --scheduler parallel/' /etc/default/sawtooth-validator
+  - sed -i -e '/^#SAWTOOTH_VALIDATOR_ARGS=/s/^.*$/SAWTOOTH_VALIDATOR_ARGS=--verbose/' /etc/default/sawtooth-validator
+
+###########################
+## CONFIGURING VALIDATOR ##
+###########################
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING SAWTOOTH VALIDATOR'
+  - printf '=======\n\n'
+
 ## create public/private signing keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
 ## create genesis block using signing keys
