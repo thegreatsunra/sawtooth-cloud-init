@@ -125,7 +125,7 @@ sawadm keygen
 sawadm keygen --force
 
 ## (DANGER ZONE!) kill your blockchain
-sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-intkey-tp-python sawtooth-settings-tp sawtooth-identity-tp
+sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
 sudo rm /var/lib/sawtooth/*
 sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
 sawadm genesis /home/sawtooth/config-genesis.batch
