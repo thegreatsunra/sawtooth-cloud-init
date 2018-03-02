@@ -17,10 +17,13 @@ alias stopvalidator="sudo systemctl stop sawtooth-validator"
 # Journal/log all sawtooth services
 alias journalsawtooth="sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp"
 alias journalall="journalsawtooth"
+alias logsawtooth="journalsawtooth"
+alias logall="journalsawtooth"
 
 # Journal/log sawtooth validator
 alias journalvalidator="sudo journalctl -f -u sawtooth-validator"
 alias journal="journalvalidator"
+alias logvalidator="journalvalidator"
 
 # Journal/log sawtooth rest api
 alias journalrestapi="sudo journalctl -f -u sawtooth-rest-api"
