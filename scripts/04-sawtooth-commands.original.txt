@@ -140,5 +140,5 @@ sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp s
 
 ## __PUBLIC_KEY_OF_LOCAL_USER__ - The public key of the sawtooth user local to this server
 ## __PUBLIC_KEY_OF_FIRST_CLIENT__ - The public key of the transactor client you want to allow
-## __PUBLIC_KEY_OF_SECOND_CLIENT__ - The public key of another transactor client you want to allow
-## __PUBLIC_KEY_OF_INTKEY_CLIENT__ - The public key of your local intkey client
+## __PUBLIC_KEY_OF_FIRST_VALIDATOR__ - The public key of the first validator node you want to allow
+## __PUBLIC_KEY_OF_SECOND_VALIDATOR__ - The public key of the second validator node you want to allow

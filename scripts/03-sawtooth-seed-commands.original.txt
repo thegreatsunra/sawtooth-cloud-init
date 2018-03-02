@@ -5,8 +5,8 @@
 ## Get IP address of server
 ip addr show eth0 | grep -Eo 'inet [^/]+'  
 
-## Change endpoint = "tcp://127.0.0.1:8800" to endpoint = "tcp://__SERVER_IP_ADDRESS__:8800"
-sudo sed -i -e 's/endpoint = "tcp:\/\/127\.0\.0\.1:8800"/endpoint = "tcp:\/\/__SERVER_IP_ADDRESS_WITH_ESCAPED_DOTS__:8800"/' /etc/sawtooth/validator.toml
+## Change endpoint = "tcp://127.0.0.1:8800" to endpoint = "tcp://__SERVER_IP__:8800"
+sudo sed -i -e 's/endpoint = "tcp:\/\/127\.0\.0\.1:8800"/endpoint = "tcp:\/\/__SERVER_IP_WITH_ESCAPED_DOTS__:8800"/' /etc/sawtooth/validator.toml
 
 ## Confirm your changes worked
 sudo cat /etc/sawtooth/validator.toml
@@ -36,3 +36,9 @@ sudo -u sawtooth sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -
 
 ## apply genesis block
 sawadm genesis /home/sawtooth/config-genesis.batch
+
+#############################
+## PLACEHOLDERS TO REPLACE ##
+#############################
+## __SERVER_IP__
+## __SERVER_IP_WITH_ESCAPED_DOTS__
