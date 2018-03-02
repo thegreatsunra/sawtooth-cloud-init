@@ -28,13 +28,3 @@ sudo pico /etc/sawtooth/validator.toml
 ## network_public_key = 'wFMwoOt>yFqI/ek.G[tfMMILHWw#vXB[Sv}>l>i)'
 ## and this line:
 ## network_private_key = 'r&oJ5aQDj4+V]p2:Lz70Eu0x#m%IwzBdP(}&hWM*'
-
-################################################################################
-
-## Start Sawtooth services
-sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
-
-## Confirm Sawtooth services started successfully
-sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp
-
-################################################################################
