@@ -1,14 +1,12 @@
 # sawtooth-cloud-init
 
-> Spin up a new Ubuntu + Hyperledger Sawtooth on Digital Ocean
+> Spin up a new Ubuntu + Hyperledger Sawtooth server on Digital Ocean
 
-### Notes
+## Notes
 
 * Placeholder values are delimited with `__double_underscores__`
 
-### Instructions
-
-### Getting started
+## Getting started
 
 1) Clone this repo
 
@@ -28,7 +26,7 @@ ssh-keygen -t rsa -b 4096 -C "email@domain.tld"
 pbcopy < ~/.ssh/id_rsa.pub
 ```
 
-4) Open `scripts/cloud-init.example.txt` in a text editor and **save it as a new file named `cloud-init.txt`**
+4) Open `scripts/01-cloud-init.example.txt` in a text editor and **save it as a new file named `01-cloud-init.txt`**
 
 5) Replace the placeholder SSH key (around line 30) with the contents of your clipboard
 
@@ -40,51 +38,50 @@ Be careful not to delete the indentation or `- ` at the beginning of the line, a
 
 6) Search within `scripts/cloud-init.txt` and replace the following placeholder strings with your desired values:
 
-* `__username__` - the username of the primary admin user that will be created on the server (e.g. `dane`)
-* `__full_name__` - the full name of the primary admin user (e.g. `Dane Petersen`)
 * `__email@domain.tld__` - the email address of the primary admin user
-* `__domain.tld__` - the domain for your website that will be hosted by nginx (e.g. `thegreatsunra.com`)
 * `__temporary_password_change_me_immediately__` - a temporary, throwaway password that will live forever on your server in your `cloud-init` script and **you will immediately change upon logging into the server**
 
-7) Save `scripts/cloud-init.txt`, select all, and copy it to your clipboard
+7) Save `scripts/01-cloud-init.txt`, select all, and copy it to your clipboard
 
-#### Digital Ocean
+### Digital Ocean
 
 1) Log in to Digital Ocean
 
 2) Create a new droplet
 
-3) Under "Select additional options" check the box for "User data" and paste in the contents of `scripts/cloud-init.txt`
+3) Under "Select additional options" check the box for "User data" and paste in the contents of `scripts/01-cloud-init.txt`
 
-4) Click "Create" and wait a few moments as Digital Ocean creates your new droplet
+4) If you want to create a multi-node Sawtooth validator network, increase the number under "How many droplets?" accordingly
 
-5) Once Digital Ocean finishes creating your droplet, copy the IP address for your droplet
+5) Click "Create" and wait a few moments as Digital Ocean creates your new droplet
 
-#### Prepare manual commands
+6) Once Digital Ocean finishes creating your droplet, copy the IP address for your droplet
 
-1) Open `scripts/manual-commands.example.txt` in a text editor and **save it as a new file named `manual-commands.txt`**
+### Prepare manual commands
 
-2) Perform a search-and-replace on `scripts/manual-commands.txt`, and replace the following values with the values you used in your `cloud-init` script, and the values provided by Digital Ocean when creating your droplet
+1) Open `scripts/02-manual-commands.example.txt` in a text editor and **save it as a new file named `02-manual-commands.txt`**
 
-3) Save `scripts/manual-commands.txt`
+2) Perform a search-and-replace on `scripts/02-manual-commands.txt`, and replace the following values with the values you used in your `cloud-init` script, and the values provided by Digital Ocean when creating your droplet
 
-4) Open `scripts/sawtooth-commands.example.txt` in a text editor and **save it as a new file named `sawtooth-commands.txt`**
+3) Save `scripts/02-manual-commands.txt`
 
-5) Perform a search-and-replace on `scripts/sawtooth-commands.txt`, and replace any `__PLACEHOLDER__` values with their actual values
+4) Perform the above steps on `scripts/03-sawtooth-seed-commands.example.txt`, `scripts/03-sawtooth-seed-commands.example.txt`, and `scripts/04-sawtooth-commands.txt`
 
-6) Save `scripts/sawtooth-commands.txt`
+### SSH into your server
 
-#### SSH
-
-1) SSH into your new server using the user `sawtooth` and the IP address provided by Digital Ocean
+1) SSH into your new server (or one of your new servers) using the user `sawtooth` and the IP address provided by Digital Ocean
 
 ```bash
 ssh sawtooth@__SERVER_IP__
 ```
 
-2) Go line-by-line through `scripts/manual-commands.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
+2) Go line-by-line through `scripts/02-manual-commands.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
 
-3) Go line-by-line through `scripts/sawtooth-commands.txt`, pasting each command into the Terminal to run it on your server like some kind of animal
+3) Go line-by-line through `scripts/03-sawtooth-seed-commands.txt`, pasting each command into the Terminal
+
+4) If you're creating a multi-node Sawtooth validator network, **log into another one of your servers** and go line-by-line through `scripts/03-sawtooth-peer-commands.txt`. Repeat this process for each (non-seed) server in your network
+
+5) Finally, go line-by-line through `scripts/04-sawtooth-commands.txt`, pasting each command into the Terminal. Some of the commands you will run on each server in your Sawtooth validator network, while other commands you will only run on a single server
 
 ## License
 
