@@ -63,12 +63,13 @@ cat .env
 # Be sure to add any other authorized clients, as well as the local sawtooth user's
 # public key, or else they won't have access (and/or you'll lock yourself out)
 sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_clients "PERMIT_KEY __PUBLIC_KEY_OF_LOCAL_USER__" "PERMIT_KEY __PUBLIC_KEY_OF_FIRST_CLIENT__" "PERMIT_KEY __PUBLIC_KEY_OF_SECOND_CLIENT__" "PERMIT_KEY __PUBLIC_KEY_OF_INTKEY_CLIENT__"
+## Test things using your intkey client
 
 ## Create a new value
-node index.js --name foo --verb set --value 42
+cd ~/intkey-client-js && node index.js --name foo --verb set --value 42
 
 ## Change that value
-node index.js --name foo --verb inc --value 13
+cd ~/intkey-client-js && node index.js --name foo --verb inc --value 13
 
 ################################################################################
 
