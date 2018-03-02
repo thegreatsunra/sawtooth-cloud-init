@@ -13,7 +13,28 @@ sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settin
 ## Grant yourself access
 sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
 
-## Echo your public key for granting yourself access via identity policy
+################################################################################
+
+## ON EACH NODE:
+
+## Long-run the intkey transaction processor with pm2
+cd ~/intkey-tp-js && pm2 start index.js && cd ~
+
+## Long-run the proxy with pm2
+cd ~/sawtooth-rest-api-proxy && pm2 start index.js && cd ~
+
+## Set up the Node intkey transactor client
+# Generate public/private keys and a placeholder Sawtooth REST API URL
+cd ~/intkey-client-js && node init.js
+
+## Get your server's IP
+ip addr show eth0 | grep -Eo 'inet [^/]+'
+
+## Edit .env and change the REST_API_URL value to your server's actual IP address
+pico .env
+
+################################################################################
+
 cat ~/.sawtooth/keys/sawtooth.pub
 
 ## Add an identity policy for yourself
@@ -50,19 +71,6 @@ cd ~/sawtooth-rest-api-proxy && pm2 start index.js && cd ~
 
 ################################################################################
 
-## Set up the Node intkey transactor client
-# Generate public/private keys and a placeholder Sawtooth validator URL
-# Run as node because it doesn't have permission to write to my folder for some reason
-# Maybe because cloud-init installed it rather than the sawtooth user
-cd ~/intkey-client-js && sudo node init.js
-
-# View your public key (and other stuff, but we really care about the public key)
-cat .env
-
-# Add the public key of your transactor client as an authorized client
-# Be sure to add any other authorized clients, as well as the local sawtooth user's
-# public key, or else they won't have access (and/or you'll lock yourself out)
-sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_clients "PERMIT_KEY __PUBLIC_KEY_OF_LOCAL_USER__" "PERMIT_KEY __PUBLIC_KEY_OF_FIRST_CLIENT__" "PERMIT_KEY __PUBLIC_KEY_OF_SECOND_CLIENT__" "PERMIT_KEY __PUBLIC_KEY_OF_INTKEY_CLIENT__"
 ## Test things using your intkey client
 
 ## Create a new value
