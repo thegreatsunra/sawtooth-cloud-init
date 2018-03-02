@@ -10,11 +10,6 @@ sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settin
 
 ################################################################################
 
-## Grant yourself access
-sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
-
-################################################################################
-
 ## ON EACH NODE:
 
 ## Long-run the intkey transaction processor with pm2
@@ -49,6 +44,9 @@ cat ~/.sawtooth/keys/sawtooth.pub
 cat ~/intkey-client-js/.env
 
 ## ON ONE NODE:
+
+## Grant yourself access
+## sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
 
 ## Add policies for yourself and all other permitted clients
 ## Do this once on any node in your network and it will populate all nodes
