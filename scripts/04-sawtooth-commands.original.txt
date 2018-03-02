@@ -1,0 +1,144 @@
+#######################
+## SAWTOOTH COMMANDS ##
+#######################
+
+## Start Sawtooth services
+sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
+
+## Confirm Sawtooth services started successfully
+sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp
+
+################################################################################
+
+## ON EACH NODE:
+
+## Long-run the intkey transaction processor with pm2
+cd ~/intkey-tp-js && pm2 start index.js && cd ~
+
+## Long-run the proxy with pm2
+cd ~/sawtooth-rest-api-proxy && pm2 start index.js && cd ~
+
+## Set up the Node intkey transactor client
+# Generate public/private keys and a placeholder Sawtooth REST API URL
+cd ~/intkey-client-js && node init.js
+
+## Get your server's IP
+ip addr show eth0 | grep -Eo 'inet [^/]+'
+
+## Edit .env and change the REST_API_URL value to your server's actual IP address
+pico .env
+
+################################################################################
+
+## ON EACH NODE:
+
+## Basically, you want to...
+## ...view and copy the sawtooth user public keys on each of your servers
+## ...view and copy the intkey client public keys on each of your servers
+## ...and then grant them all transactor access via identity policy
+
+## View your sawtooth user's public key
+cat ~/.sawtooth/keys/sawtooth.pub
+
+## View your intkey client public key
+cat ~/intkey-client-js/.env
+
+## ON ONE NODE:
+
+## Grant yourself access
+## sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
+
+## Add policies for yourself and all other permitted clients
+## Do this once on any node in your network and it will populate all nodes
+## Note that this overwrites any existing policies with the same name
+## If you forget to add your own public key here, you will lock yourself out
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_clients "PERMIT_KEY __PUBLIC_KEY_OF_LOCAL_USER__" "PERMIT_KEY __PUBLIC_KEY_OF_FIRST_CLIENT__"
+
+## Add permitted clients to a transactor role to give them transactor permissions
+sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 transactor permitted_clients
+
+################################################################################
+
+## ON EACH NODE:
+
+## Basically, you want to...
+## ...view and copy the validator public keys on each of your servers
+## ...and then grant them all network access via identity policy
+
+## View your sawtooth validator keys (these are different than your sawtooth user keys)
+sudo cat /etc/sawtooth/keys/validator.pub
+
+## Add policies for yourself and all other permitted nodes
+## Note that this overwrites any existing policies with the same name
+## If you forget to add your validator's public key here, you will lock yourself out
+sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_nodes "PERMIT_KEY __PUBLIC_KEY_OF_FIRST_VALIDATOR__" "PERMIT_KEY __PUBLIC_KEY_OF_SECOND_VALIDATOR__"
+
+## create a network role for permitted nodes
+sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 network permitted_nodes
+
+################################################################################
+
+## ON ONE NODE:
+
+## Test things using your intkey client
+
+## Create a new value
+cd ~/intkey-client-js && node index.js --name foo --verb set --value 42
+
+## Change that value
+cd ~/intkey-client-js && node index.js --name foo --verb inc --value 13
+
+################################################################################
+
+## Get your public key for adding to GitHub
+cat ~/.ssh/id_rsa.pub
+
+## Copy/paste the output from the command above into a new deploy key for your transaction processor's GitHub repo
+
+################################################################################
+################################################################################
+
+## BONUS COMMANDS!
+
+## start all services
+sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
+
+## stop all services
+sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
+
+## see what the validator is doing
+sudo journalctl -f -u sawtooth-validator
+
+## See what everything is doing
+sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp
+
+## list all roles
+sawtooth identity role list
+
+## list all policies (if this command doesn't error out, that is)
+sawtooth identity policy list
+
+## generate validator keys
+sawadm keygen
+
+## force regeneration of validator keys
+sawadm keygen --force
+
+## (DANGER ZONE!) kill your blockchain
+sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-intkey-tp-python sawtooth-settings-tp sawtooth-identity-tp
+sudo rm /var/lib/sawtooth/*
+sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
+sawadm genesis /home/sawtooth/config-genesis.batch
+sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
+
+################################################################################
+################################################################################
+
+#############################
+## PLACEHOLDERS TO REPLACE ##
+#############################
+
+## __PUBLIC_KEY_OF_LOCAL_USER__ - The public key of the sawtooth user local to this server
+## __PUBLIC_KEY_OF_FIRST_CLIENT__ - The public key of the transactor client you want to allow
+## __PUBLIC_KEY_OF_FIRST_VALIDATOR__ - The public key of the first validator node you want to allow
+## __PUBLIC_KEY_OF_SECOND_VALIDATOR__ - The public key of the second validator node you want to allow

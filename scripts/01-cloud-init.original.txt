@@ -169,6 +169,8 @@ runcmd:
 #  - ufw allow 4444/tcp
 ## Allow requests on 8008:
   - ufw allow 8008
+## Allow requests on 8888:
+  - ufw allow 8888
 ## Allow requests on 4004:
   - ufw allow 4004/tcp
 ## Allow requests on 8800:
@@ -239,47 +241,61 @@ runcmd:
   - apt update -yq
   - DEBIAN_FRONTEND=noninteractive apt install -yq lynis
 
-################################
-## INSTALLING SAWTOOTH STABLE ##
-################################
+#########################
+## INSTALLING SAWTOOTH ##
+#########################
   - printf '\n\n=======\n'
-  - echo 'ADDING APT FOR SAWTOOTH STABLE'
+  - echo 'ADDING APT FOR SAWTOOTH'
   - printf '=======\n\n'
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD
-  - add-apt-repository 'deb http://repo.sawtooth.me/ubuntu/1.0/stable xenial universe' -y
+## Use the following two commands for sawtooth stable
+#  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8AA7AF1F1091A5FD
+#  - add-apt-repository 'deb http://repo.sawtooth.me/ubuntu/1.0/stable xenial universe' -y
+## Use the following two commands for sawtooth nightly (instead of stable)
+  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 44FC67F19B2466EA
+  - apt-add-repository "deb http://repo.sawtooth.me/ubuntu/nightly xenial universe" -y
   - apt update -y
   - apt install -y sawtooth python3-sawtooth-identity
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
 ## allow connections from outside on port 8008
   - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --verbose --bind 0.0.0.0:8008/' /etc/default/sawtooth-rest-api
-## configure validator to trust network connections and allow dynamic peering from anyone
+## configure validator to log verbosely
   - sed -i -e '/^#SAWTOOTH_VALIDATOR_ARGS=/s/^.*$/SAWTOOTH_VALIDATOR_ARGS=--verbose/' /etc/default/sawtooth-validator
-#  - cp /etc/sawtooth/validator.toml.example /etc/sawtooth/validator.toml
-#  - sed -i -e 's/"network:tcp:\/\/127\.0\.0\.1:8800"/"network:tcp:\/\/0\.0\.0\.0:8800"/' /etc/sawtooth/validator.toml
+
+###########################
+## CONFIGURING VALIDATOR ##
+###########################
+  - printf '\n\n=======\n'
+  - echo 'CONFIGURING SAWTOOTH VALIDATOR'
+  - printf '=======\n\n'
+
+## copy the validator config example to a new file
+  - cp /etc/sawtooth/validator.toml.example /etc/sawtooth/validator.toml
+  - chmod 777 /etc/sawtooth/validator.toml
+## set network server to 0.0.0.0 for localhost on digital ocean
+  - sed -i -e 's/"network:tcp:\/\/127\.0\.0\.1:8800"/"network:tcp:\/\/0\.0\.0\.0:8800"/' /etc/sawtooth/validator.toml
+## set component server to 0.0.0.0 for localhost on digital ocean
+  - sed -i -e 's/"component:tcp:\/\/127\.0\.0\.1:4004"/"component:tcp:\/\/0\.0\.0\.0:4004"/' /etc/sawtooth/validator.toml
+## set peering to dynamic
+## (this is disabled for now as dynamic peering doesn't seem to work)
 #  - sed -i -e 's/peering = "static"/peering = "dynamic"/' /etc/sawtooth/validator.toml
-#  - sed -i -e 's/peers = \["tcp:\/\/127\.0\.0\.1:8801"\]/peers = \["tcp:\/\/1\.1\.1\.1:8800"\]/' /etc/sawtooth/validator.toml
-## do this for validator node, but not validator master
-##  - sed -i -e 's/seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/seeds = \["tcp:\/\/1\.1\.1\.1:8800"\]/' /etc/sawtooth/validator.toml
-## do this for validator master, but not validator node
-#  - sed -i -e 's/seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/# seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/' /etc/sawtooth/validator.toml
-#  - sed -i -e 's/endpoint = "tcp:\/\/127\.0\.0\.1:8800"/endpoint = "tcp:\/\/0\.0\.0\.0:8800"/' /etc/sawtooth/validator.toml
-#  - sed -i -e 's/^\[permissions\]/# \[permissions\]/' /etc/sawtooth/validator.toml
-#  - sed -i -e 's/^network_public_key =/# network_public_key =/' /etc/sawtooth/validator.toml
-#  - sed -i -e 's/^network_private_key =/# network_private_key =/' /etc/sawtooth/validator.toml
-#  - sed -i -e 's/^transactor = "policy\.example"/# transactor = "policy\.example"/' /etc/sawtooth/validator.toml
-#  - sed -i -e 's/^"transactor\.transaction_signer" = "policy\.example"/# "transactor\.transaction_signer" = "policy\.example"/' /etc/sawtooth/validator.toml
-  - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
+## Reset default value for peers because the port is wrong
+  - sed -i -e 's/peers = \["tcp:\/\/127\.0\.0\.1:8801"\]/# peers = ["tcp:\/\/0\.0\.0\.0:8800"]/' /etc/sawtooth/validator.toml
+## comment out seeds because we're using static peering so we need to define peers but we don't need to define seeds
+  - sed -i -e 's/seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/# seeds = ["tcp:\/\/0\.0\.0\.0:8800"]/' /etc/sawtooth/validator.toml
+## set scheduler to parallel
+  - sed -i -e "s/scheduler = 'serial'/scheduler = 'parallel'/" /etc/sawtooth/validator.toml
+## reduce maximum peer connectivity to 5 (because more than 5 crashes the network)
+  - sed -i -e 's/maximum_peer_connectivity = 10/maximum_peer_connectivity = 5/' /etc/sawtooth/validator.toml
+## uncomment roles because we going to use it to establish a "trust" network 
+  - sed -i -e 's/# \[roles\]/[roles]/' /etc/sawtooth/validator.toml
+## establish a "challenge" network 
+  - sed -i -e 's/# network = "trust"/network = "challenge"/' /etc/sawtooth/validator.toml
+
 ## create public/private signing keys
+  - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
   - sudo -u sawtooth sawtooth keygen --key-dir /home/sawtooth/.sawtooth/keys sawtooth
-## create genesis block using signing keys
-## do this for validator master, but not validator node
-  - sudo -u sawtooth sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
-## apply genesis block
-## do this for validator master, but not validator node
-  - sawadm genesis /home/sawtooth/config-genesis.batch
 ## generate validator keys at /etc/sawtooth/keys/validator.priv & /etc/sawtooth/keys/validator.pub
   - sawadm keygen
-## now you should be able to start all the things
 
 #####################
 ## INSTALLING NODE ##
@@ -298,6 +314,42 @@ runcmd:
   - printf '=======\n\n'
   - npm install -g pm2
 
+######################
+## INSTALLING PROXY ##
+######################
+  - cd /home/sawtooth
+  - sudo -u sawtooth git clone https://github.com/thegreatsunra/sawtooth-rest-api-proxy.git
+  - cd sawtooth-rest-api-proxy
+  - sudo -u sawtooth npm install
+  - cd /home/sawtooth
+
+#####################################
+## INSTALLING ZEROMQ KEY GENERATOR ##
+#####################################
+
+  - cd /home/sawtooth
+  - sudo -u sawtooth git clone https://github.com/thegreatsunra/zeromq-keypair-generator.git
+  - cd zeromq-keypair-generator
+  - sudo -u sawtooth npm install
+  - cd /home/sawtooth
+
+#######################
+## INSTALLING INTKEY ##
+#######################
+## Clone and install the Node intkey transaction processor
+  - cd /home/sawtooth
+  - sudo -u sawtooth git clone https://github.com/thegreatsunra/intkey-tp-js.git
+  - cd intkey-tp-js
+  - sudo -u sawtooth npm install
+  - cd /home/sawtooth
+
+## Clone and install the Node intkey transactor client
+  - cd /home/sawtooth
+  - sudo -u sawtooth git clone https://github.com/thegreatsunra/intkey-client-js.git
+  - cd intkey-client-js
+  - sudo -u sawtooth npm install
+  - cd /home/sawtooth
+
 #######################
 ## SETTING UP GITHUB ##
 #######################
@@ -305,17 +357,6 @@ runcmd:
   - echo 'SETTING UP GITHUB'
   - printf '=======\n\n'
   - sudo -u sawtooth ssh-keygen -t rsa -N "" -b 4096 -C "__email@domain.tld__" -f /home/sawtooth/.ssh/id_rsa
-
-###########################
-## INSTALLING YARN ##
-###########################
-#  - printf '\n\n=======\n'
-#  - echo 'INSTALLING YARN'
-#  - printf '=======\n\n'
-#  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-#  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-#  - apt update -yq
-#  - apt install -y yarn
 
 #####################
 ## INSTALL UPDATES ##

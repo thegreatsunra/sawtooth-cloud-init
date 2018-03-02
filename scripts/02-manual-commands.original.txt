@@ -11,6 +11,9 @@ tail -fn+1 /var/log/cloud-init-output.log
 ## Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" && chsh -s /bin/zsh
 
+## Download zsh aliases and restart your shell
+curl https://raw.githubusercontent.com/thegreatsunra/sawtooth-cloud-init/develop/snippets/aliases.zsh > ~/.oh-my-zsh/custom/aliases.zsh && source ~/.zshrc
+
 ## Change passwords
 sudo passwd root
 sudo passwd sawtooth

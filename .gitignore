@@ -2,9 +2,11 @@
 .#*
 .DS_Store
 
-cloud-init.txt
-manual-commands.txt
-sawtooth-commands.txt
+01-cloud-init.txt
+02-manual-commands.txt
+03-sawtooth-peer-commands.txt
+03-sawtooth-seed-commands.txt
+04-sawtooth-commands.txt
 thumbs.db
 *.log*
 *.zip*
