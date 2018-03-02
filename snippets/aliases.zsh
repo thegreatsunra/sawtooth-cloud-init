@@ -1,8 +1,9 @@
 # Put this file in ~/.oh-my-zsh/custom/ and it will be loaded automatically
 # Custom public aliases
 
-# Edit this file
-alias aliases="pico ~/.oh-my-zsh/custom/aliases.zsh"
+# View this file
+alias viewaliases="cat ~/.oh-my-zsh/custom/aliases.zsh"
+alias aliases="viewaliases"
 
 # Start and stop all sawtooth services
 alias startsawtooth="sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp"
