@@ -1,12 +1,12 @@
-############################
-## SAWTOOTH PEER COMMANDS ##
-############################
+###################################
+## SAWTOOTH PEER SERVER COMMANDS ##
+###################################
 
 ## Get IP address for this peer server
 ip addr show eth0 | grep -Eo 'inet [^/]+'  
 
-## Change endpoint = "tcp://127.0.0.1:8800" to endpoint = "tcp://__SERVER_IP_ADDRESS__:8800"
-sudo sed -i -e 's/endpoint = "tcp:\/\/127\.0\.0\.1:8800"/endpoint = "tcp:\/\/__SERVER_IP_ADDRESS_WITH_ESCAPED_DOTS__:8800"/' /etc/sawtooth/validator.toml
+## Change endpoint = "tcp://127.0.0.1:8800" to endpoint = "tcp://__SERVER_IP__:8800"
+sudo sed -i -e 's/endpoint = "tcp:\/\/127\.0\.0\.1:8800"/endpoint = "tcp:\/\/__SERVER_IP_WITH_ESCAPED_DOTS__:8800"/' /etc/sawtooth/validator.toml
 
 ## Confirm your changes worked
 sudo cat /etc/sawtooth/validator.toml
@@ -28,3 +28,9 @@ sudo pico /etc/sawtooth/validator.toml
 ## network_public_key = 'wFMwoOt>yFqI/ek.G[tfMMILHWw#vXB[Sv}>l>i)'
 ## and this line:
 ## network_private_key = 'r&oJ5aQDj4+V]p2:Lz70Eu0x#m%IwzBdP(}&hWM*'
+
+#############################
+## PLACEHOLDERS TO REPLACE ##
+#############################
+## __SERVER_IP__
+## __SERVER_IP_ADDRESS_WITH_ESCAPED_DOTS__
