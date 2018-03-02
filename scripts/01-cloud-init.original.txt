@@ -256,7 +256,7 @@ runcmd:
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
 ## allow connections from outside on port 8008
   - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --verbose --bind 0.0.0.0:8008/' /etc/default/sawtooth-rest-api
-## configure validator to trust network connections and allow dynamic peering from anyone
+## configure validator to log verbosely
   - sed -i -e '/^#SAWTOOTH_VALIDATOR_ARGS=/s/^.*$/SAWTOOTH_VALIDATOR_ARGS=--verbose/' /etc/default/sawtooth-validator
 
 ###########################
@@ -274,10 +274,11 @@ runcmd:
 ## set component server to 0.0.0.0 for localhost on digital ocean
   - sed -i -e 's/"component:tcp:\/\/127\.0\.0\.1:4004"/"component:tcp:\/\/0\.0\.0\.0:4004"/' /etc/sawtooth/validator.toml
 ## set peering to dynamic
-  - sed -i -e 's/peering = "static"/peering = "dynamic"/' /etc/sawtooth/validator.toml
-## comment out peers because we're using dynamic network discovery but also reset the default value because it's wrong
+## (this is disabled for now as dynamic peering doesn't seem to work)
+#  - sed -i -e 's/peering = "static"/peering = "dynamic"/' /etc/sawtooth/validator.toml
+## Reset default value for peers because the port is wrong
   - sed -i -e 's/peers = \["tcp:\/\/127\.0\.0\.1:8801"\]/# peers = ["tcp:\/\/0\.0\.0\.0:8800"]/' /etc/sawtooth/validator.toml
-## comment out seeds because we only need it for peer nodes and change the default value because it's wrong
+## comment out seeds because we're using static peering so we need to define peers but we don't need to define seeds
   - sed -i -e 's/seeds = \["tcp:\/\/127\.0\.0\.1:8801"\]/# seeds = ["tcp:\/\/0\.0\.0\.0:8800"]/' /etc/sawtooth/validator.toml
 ## set scheduler to parallel
   - sed -i -e "s/scheduler = 'serial'/scheduler = 'parallel'/" /etc/sawtooth/validator.toml
