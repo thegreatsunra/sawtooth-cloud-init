@@ -40,13 +40,6 @@ sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://
 ## Note that this overwrites any existing policies with the same name
 ## If you forget to add your validator's public key here, you will lock yourself out
 sawtooth identity policy create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 permitted_clients "PERMIT_KEY __PUBLIC_KEY_OF_LOCAL_VALIDATOR__" "PERMIT_KEY __PUBLIC_KEY_OF_FIRST_PEER_VALIDATOR__" "PERMIT_KEY __PUBLIC_KEY_OF_SECOND_PEER_VALIDATOR__"
-
-## list all roles
-sawtooth identity role list
-
-## list all policies (if this command doesn't error out, that is)
-sawtooth identity policy list
-
 ################################################################################
 
 ## Long-run the intkey transaction processor with pm2
@@ -99,6 +92,12 @@ sudo journalctl -f -u sawtooth-validator
 
 ## See what everything is doing
 sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp
+
+## list all roles
+sawtooth identity role list
+
+## list all policies (if this command doesn't error out, that is)
+sawtooth identity policy list
 
 ## generate validator keys
 sawadm keygen
