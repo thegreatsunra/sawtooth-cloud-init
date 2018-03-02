@@ -35,6 +35,14 @@ pico .env
 
 ################################################################################
 
+## ON EACH NODE:
+
+## Basically, you want to...
+## ...view and copy the sawtooth user public keys on each of your servers
+## ...view and copy the intkey client public keys on each of your servers
+## ...and then grant them all transactor access via identity policy
+
+## View your sawtooth user's public key
 cat ~/.sawtooth/keys/sawtooth.pub
 
 ## View your intkey client public key
@@ -73,6 +81,7 @@ sawtooth identity role create --key ~/.sawtooth/keys/sawtooth.priv --url http://
 ################################################################################
 
 ## ON ONE NODE:
+
 ## Test things using your intkey client
 
 ## Create a new value
@@ -88,6 +97,7 @@ cat ~/.ssh/id_rsa.pub
 
 ## Copy/paste the output from the command above into a new deploy key for your transaction processor's GitHub repo
 
+################################################################################
 ################################################################################
 
 ## BONUS COMMANDS!
