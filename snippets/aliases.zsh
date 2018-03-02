@@ -54,6 +54,9 @@ alias catvalidatorpublickey="viewvalidatorpublickey"
 alias catvalidatorpubkey="viewvalidatorpublickey"
 alias catvalidatorkey="viewvalidatorpublickey"
 
+# View server's IP address
+alias whatsmyip="ip addr show eth0 | grep -Eo 'inet [^/]+'"
+
 # Update apt things
 alias update="sudo apt update -y && sudo apt update -y"
 alias upgrade="update"
