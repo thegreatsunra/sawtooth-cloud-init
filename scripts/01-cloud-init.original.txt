@@ -28,7 +28,7 @@ users:
     gecos: Professor Sawtooth
     ssh-authorized-keys:
 ##    SSH keys
-      - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== __email@domain.tld__
+      - ssh-rsa AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== __EMAIL@DOMAIN.TLD__
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     groups: sudo
     shell: /bin/bash
@@ -89,7 +89,7 @@ runcmd:
 ## Back up our fail2ban configuration file:
   - cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.original
 ## Set our email address for receiving fail2ban messages:
-  - sed -i -e '/^destemail/s/^.*$/destemail = __email@domain.tld__/' /etc/fail2ban/jail.conf
+  - sed -i -e '/^destemail/s/^.*$/destemail = __EMAIL@DOMAIN.TLD__/' /etc/fail2ban/jail.conf
 ## Use sendmail to send email messages:
   - sed -i -e '/^mta/s/^.*$/mta = sendmail/' /etc/fail2ban/jail.conf
 ## Now that we're done configuring fail2ban, restart it:
@@ -191,7 +191,7 @@ runcmd:
 ## Back up our logwatch configuration file:
   - cp /usr/share/logwatch/default.conf/logwatch.conf /usr/share/logwatch/default.conf/logwatch.original
 ## Set our email address for receiving logwatch messages:
-  - sed -i -e 's/^#MailTo.*$/MailTo = __email@domain.tld__/' /usr/share/logwatch/default.conf/logwatch.conf
+  - sed -i -e 's/^#MailTo.*$/MailTo = __EMAIL@DOMAIN.TLD__/' /usr/share/logwatch/default.conf/logwatch.conf
 ## Set our default logwatch output format to email:
   - sed -i -e 's/^Output.*$/Output = mail/' /usr/share/logwatch/default.conf/logwatch.conf
 ## Set our default logwatch format to HTML:
@@ -356,7 +356,7 @@ runcmd:
   - printf '\n\n=======\n'
   - echo 'SETTING UP GITHUB'
   - printf '=======\n\n'
-  - sudo -u sawtooth ssh-keygen -t rsa -N "" -b 4096 -C "__email@domain.tld__" -f /home/sawtooth/.ssh/id_rsa
+  - sudo -u sawtooth ssh-keygen -t rsa -N "" -b 4096 -C "__EMAIL@DOMAIN.TLD__" -f /home/sawtooth/.ssh/id_rsa
 
 #####################
 ## INSTALL UPDATES ##
@@ -388,5 +388,5 @@ power_state:
 #############################
 ## PLACEHOLDERS TO REPLACE ##
 #############################
-## __email@domain.tld__ - the email address of the primary admin user
+## __EMAIL@DOMAIN.TLD__ - the email address of the primary admin user
 ## __temporary_password_change_me_immediately__ - a temporary password that you will change immediately after logging into the server
