@@ -163,16 +163,12 @@ runcmd:
   - perl -0777 -i.original -pe "s@# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@# custom logging directives for psad\n-A INPUT -j LOG\n-A FORWARD -j LOG\n\n# don\'t delete the \'COMMIT\' line or these rules won\'t be processed\nCOMMIT@igs" /etc/ufw/before6.rules
 ## Allow SSH on the default ports:
   - ufw allow ssh
-## Deny requests on the default SSH ports:
-#  - ufw deny ssh
-## Allow requests on updated SSH port:
-#  - ufw allow 4444/tcp
-## Allow requests on 8008:
-  - ufw allow 8008
 ## Allow requests on 8888:
   - ufw allow 8888
-## Allow requests on 4004:
-  - ufw allow 4004/tcp
+## Allow http / port 80: (we open this port temporarily for certbot)
+  - ufw allow http
+## Allow requests on 4004: (disabled because sawtooth _should_ only be using this for localhost communication)
+##  - ufw allow 4004/tcp
 ## Allow requests on 8800:
   - ufw allow 8800/tcp
 ## Turn on logging:
