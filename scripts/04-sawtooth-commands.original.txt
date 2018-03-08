@@ -46,7 +46,7 @@ cat ~/intkey-client-js/.env
 ## ON ONE NODE:
 
 ## Grant yourself access
-## sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
+sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
 
 ## Add policies for yourself and all other permitted clients
 ## Do this once on any node in your network and it will populate all nodes
@@ -125,7 +125,7 @@ sawadm keygen
 sawadm keygen --force
 
 ## (DANGER ZONE!) kill your blockchain
-sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-intkey-tp-python sawtooth-settings-tp sawtooth-identity-tp
+sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
 sudo rm /var/lib/sawtooth/*
 sawset genesis -k /home/sawtooth/.sawtooth/keys/sawtooth.priv -o /home/sawtooth/config-genesis.batch
 sawadm genesis /home/sawtooth/config-genesis.batch

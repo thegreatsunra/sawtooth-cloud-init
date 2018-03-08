@@ -38,7 +38,42 @@ sudo sendmailconfig
 
 ################################################################################
 
+## Create your server's hostname (e.g. awesome-server.domain.tld)
+lsattr /etc/hostname && sudo chattr -i /etc/hostname
+sudo sh -c "echo '__SERVER_DOMAIN_ADDRESS__' > /etc/hostname"
+sudo hostname -F /etc/hostname
+sudo chattr +i /etc/hostname
+
+## ADD SERVER_DOMAIN_ADDRESS (AND SERVER_IP) TO YOUR DNS AS AN "A" RECORD
+
+################################################################################
+
+## Start the rest api proxy "init" server on port 80
+## KEEP THIS SCRIPT RUNNING AND OPEN A NEW SSH CONNECTION TO YOUR SERVER
+cd ~/sawtooth-rest-api-proxy && sudo node init.js
+
+## In a second SSH session, use certbot to issue an SSL certificate for your server
+cd ~/sawtooth-rest-api-proxy && sudo certbot certonly --agree-tos --noninteractive --email __EMAIL@DOMAIN.TLD__ --webroot -w ./public -d __SERVER_DOMAIN_ADDRESS__
+
+## If the certbot command executed successfully:
+## 1) switch to your first SSH session
+## 2) Type CTRL+C to stop the proxy "init" server running on port 80
+## 3) Close your firewall on port 80:
+sudo ufw deny http && sudo ufw reload
+
+## Copy your SSL key and certificate into your rest api project folder
+sudo cp /etc/letsencrypt/live/__YOUR_SERVER_DOMAIN_NAME__/fullchain.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem  && sudo cp /etc/letsencrypt/live/__YOUR_SERVER_DOMAIN_NAME__/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/privkey.pem
+
+## Change ownership for key files to sawtooth user, and change permissions
+sudo chown sawtooth:sawtooth ~/sawtooth-rest-api-proxy/sslcert/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem && chmod 755 ~/sawtooth-rest-api-proxy/sslcert/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem
+
+## TODO: set up cron job to renew certs
+
+## TODO: set up cron job to copy certs to proxy folder
+
 #############################
 ## PLACEHOLDERS TO REPLACE ##
 #############################
 ## __SERVER_IP__ - the IP address Digital Ocean assigned to your server
+## __SERVER_DOMAIN_ADDRESS__ - The domain/subdomain address of the server (e.g. awesome-server.domain.tld)
+## __EMAIL@DOMAIN.TLD__ - Your email address
