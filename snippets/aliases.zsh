@@ -6,8 +6,8 @@ alias viewaliases="cat ~/.oh-my-zsh/custom/aliases.zsh"
 alias aliases="viewaliases"
 
 # Start and stop all sawtooth services
-alias startsawtooth="sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp"
-alias stopsawtooth="sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp"
+alias startsawtooth="sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp sawtooth-block-info-tp"
+alias stopsawtooth="sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp sawtooth-block-info-tp"
 alias start="startsawtooth"
 alias stop="stopsawtooth"
 
@@ -16,7 +16,7 @@ alias startvalidator="sudo systemctl start sawtooth-validator"
 alias stopvalidator="sudo systemctl stop sawtooth-validator"
 
 # Journal/log all sawtooth services
-alias journalsawtooth="sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp"
+alias journalsawtooth="sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp -u sawtooth-block-info-tp"
 alias journalall="journalsawtooth"
 alias logsawtooth="journalsawtooth"
 alias logall="journalsawtooth"

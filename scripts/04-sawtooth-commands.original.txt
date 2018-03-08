@@ -107,16 +107,16 @@ cat ~/.ssh/id_rsa.pub
 ## BONUS COMMANDS!
 
 ## start all services
-sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
+sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp sawtooth-block-info-tp
 
 ## stop all services
-sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
+sudo systemctl stop sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp sawtooth-block-info-tp
 
 ## see what the validator is doing
 sudo journalctl -f -u sawtooth-validator
 
 ## See what everything is doing
-sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp
+sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp -u sawtooth-block-info-tp
 
 ## list all roles
 sawtooth identity role list
