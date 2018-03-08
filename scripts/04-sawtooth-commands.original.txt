@@ -3,10 +3,10 @@
 #######################
 
 ## Start Sawtooth services
-sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp
+sudo systemctl start sawtooth-validator sawtooth-rest-api sawtooth-settings-tp sawtooth-identity-tp sawtooth-block-info-tp
 
 ## Confirm Sawtooth services started successfully
-sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp
+sudo journalctl -f -u sawtooth-validator -u sawtooth-rest-api -u sawtooth-settings-tp -u sawtooth-identity-tp -u sawtooth-block-info-tp
 
 ################################################################################
 
@@ -47,6 +47,12 @@ cat ~/intkey-client-js/.env
 
 ## Grant yourself access
 sawset proposal create --key ~/.sawtooth/keys/sawtooth.priv --url http://0.0.0.0:8008 sawtooth.identity.allowed_keys=`cat ~/.sawtooth/keys/sawtooth.pub`
+
+## Use sawtooth-block-info-tp as a batch injector
+sawset proposal create sawtooth.validator.batch_injectors=block_info 
+
+## Configure block validation rules to use sawtooth-block-info-tp
+sawset proposal create 'sawtooth.validator.block_validation_rules=NofX:1,block_info;XatY:block_info,0;local:0'
 
 ## Add policies for yourself and all other permitted clients
 ## Do this once on any node in your network and it will populate all nodes

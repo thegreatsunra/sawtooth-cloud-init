@@ -260,7 +260,7 @@ runcmd:
   - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 44FC67F19B2466EA
   - apt-add-repository "deb http://repo.sawtooth.me/ubuntu/nightly xenial universe" -y
   - apt update -y
-  - apt install -y sawtooth python3-sawtooth-identity
+  - apt install -y sawtooth python3-sawtooth-identity python3-sawtooth-block-info
   - sudo -u sawtooth mkdir -p /home/sawtooth/.sawtooth/keys
 ## allow connections from outside on port 8008
   - sed -i -e '/^SAWTOOTH_REST_API_ARGS=/s/^.*$/SAWTOOTH_REST_API_ARGS=--connect tcp:\/\/localhost:4004 --verbose --bind 0.0.0.0:8008/' /etc/default/sawtooth-rest-api
