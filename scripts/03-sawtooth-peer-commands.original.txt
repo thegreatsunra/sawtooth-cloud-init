@@ -15,8 +15,9 @@ sudo cat /etc/sawtooth/validator.toml
 sudo pico /etc/sawtooth/validator.toml
 
 ## change this line:
-## peers = ["tcp://0.0.0.0:8800"]
+## # peers = ["tcp://0.0.0.0:8800"]
 ## to something like this: (use the IP addresses for the other servers in your sawtooth validator network)
+## (also, uncomment it)
 ## peers = ["tcp://123.123.123.123:8800", "tcp://234.234.234.234:8800"]
 
 ## Change ZeroMQ public/secret keys
