@@ -237,6 +237,16 @@ runcmd:
   - apt update -yq
   - DEBIAN_FRONTEND=noninteractive apt install -yq lynis
 
+########################
+## INSTALLING CERTBOT ##
+########################
+  - printf '\n\n=======\n'
+  - echo 'INSTALLING CERTBOT'
+  - printf '=======\n\n'
+  - add-apt-repository -y ppa:certbot/certbot
+  - apt update -yq
+  - DEBIAN_FRONTEND=noninteractive apt install -yq certbot
+
 #########################
 ## INSTALLING SAWTOOTH ##
 #########################
@@ -322,7 +332,6 @@ runcmd:
 #####################################
 ## INSTALLING ZEROMQ KEY GENERATOR ##
 #####################################
-
   - cd /home/sawtooth
   - sudo -u sawtooth git clone https://github.com/thegreatsunra/zeromq-keypair-generator.git
   - cd zeromq-keypair-generator
