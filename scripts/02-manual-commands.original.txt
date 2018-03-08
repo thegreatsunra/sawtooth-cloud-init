@@ -38,7 +38,18 @@ sudo sendmailconfig
 
 ################################################################################
 
+## Create your server's hostname (e.g. awesome-server.domain.tld)
+lsattr /etc/hostname && sudo chattr -i /etc/hostname
+sudo sh -c "echo '__SERVER_DOMAIN_ADDRESS__' > /etc/hostname"
+sudo hostname -F /etc/hostname
+sudo chattr +i /etc/hostname
+
+## ADD SERVER_DOMAIN_ADDRESS (AND SERVER_IP) TO YOUR DNS AS AN "A" RECORD
+
+################################################################################
+
 #############################
 ## PLACEHOLDERS TO REPLACE ##
 #############################
 ## __SERVER_IP__ - the IP address Digital Ocean assigned to your server
+## __SERVER_DOMAIN_ADDRESS__ - The domain/subdomain address of the server (e.g. awesome-server.domain.tld)
