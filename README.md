@@ -1,6 +1,6 @@
 # sawtooth-cloud-init
 
-> Spin up a new Ubuntu + Hyperledger Sawtooth server on Digital Ocean
+> Spin up a new Ubuntu + Hyperledger Sawtooth network on Digital Ocean
 
 ## Notes
 
