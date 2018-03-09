@@ -128,8 +128,8 @@ runcmd:
   - printf '\n\n=======\n'
   - echo 'CHANGING PASSWDS'
   - printf '=======\n\n'
-  - echo "root:__temporary_password_change_me_immediately__"|chpasswd
-  - echo "sawtooth:__temporary_password_change_me_immediately__"|chpasswd
+  - echo "root:__TEMPORARY_PASSWORD_CHANGE_ME_IMMEDIATELY__"|chpasswd
+  - echo "sawtooth:__TEMPORARY_PASSWORD_CHANGE_ME_IMMEDIATELY__"|chpasswd
 
 ##############
 ## TIMEZONE ##
@@ -394,4 +394,4 @@ power_state:
 ## PLACEHOLDERS TO REPLACE ##
 #############################
 ## __EMAIL@DOMAIN.TLD__ - the email address of the primary admin user
-## __temporary_password_change_me_immediately__ - a temporary password that you will change immediately after logging into the server
+## __TEMPORARY_PASSWORD_CHANGE_ME_IMMEDIATELY__ - a temporary password that you will change immediately after logging into the server
