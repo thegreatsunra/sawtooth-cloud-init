@@ -61,7 +61,7 @@ cd ~/sawtooth-rest-api-proxy && sudo certbot certonly --agree-tos --noninteracti
 sudo ufw deny http && sudo ufw reload
 
 ## Copy your SSL key and certificate into your rest api project folder
-sudo cp /etc/letsencrypt/live/__YOUR_SERVER_DOMAIN_NAME__/fullchain.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem  && sudo cp /etc/letsencrypt/live/__YOUR_SERVER_DOMAIN_NAME__/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/privkey.pem
+sudo cp /etc/letsencrypt/live/__SERVER_DOMAIN_ADDRESS__/fullchain.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem  && sudo cp /etc/letsencrypt/live/__SERVER_DOMAIN_ADDRESS__/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/privkey.pem
 
 ## Change ownership for key files to sawtooth user, and change permissions
 sudo chown sawtooth:sawtooth ~/sawtooth-rest-api-proxy/sslcert/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem && chmod 755 ~/sawtooth-rest-api-proxy/sslcert/privkey.pem ~/sawtooth-rest-api-proxy/sslcert/fullchain.pem
