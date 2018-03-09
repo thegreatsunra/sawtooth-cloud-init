@@ -33,6 +33,7 @@ sudo pico /etc/sawtooth/validator.toml
 ## network_public_key = 'wFMwoOt>yFqI/ek.G[tfMMILHWw#vXB[Sv}>l>i)'
 ## and this line:
 ## network_private_key = 'r&oJ5aQDj4+V]p2:Lz70Eu0x#m%IwzBdP(}&hWM*'
+## ...to the values outputted by the script on your seed server
 
 ################################################################################
 ################################################################################
